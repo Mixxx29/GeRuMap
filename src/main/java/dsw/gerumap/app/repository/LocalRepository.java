@@ -22,4 +22,9 @@ public class LocalRepository implements DataRepository {
     public void add(CompositeModelNode parent, ModelNode child) {
 
     }
+
+    @Override
+    public void remove(CompositeModelNode parent, ModelNode child) {
+
+    }
 }

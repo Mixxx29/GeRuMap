@@ -1,7 +1,6 @@
 package dsw.gerumap.app.repository.composite;
 
 public class ModelNode {
-
     private String name;
 
     public ModelNode(String name) {

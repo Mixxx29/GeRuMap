@@ -9,6 +9,7 @@ import java.awt.*;
 public abstract class AbstractWindow extends JPanel {
 
     private JLabel titleLabel;
+    protected JPanel content;
 
     public AbstractWindow(String title) {
         // Set layout
@@ -31,5 +32,11 @@ public abstract class AbstractWindow extends JPanel {
         titleLabelPanel.setBackground(new Color(60, 60, 60));
         titleLabelPanel.add(titleLabel, BorderLayout.CENTER);
         add(titleLabelPanel, BorderLayout.NORTH);
+
+        content = new JPanel(new BorderLayout());
+    }
+
+    public void setTitle(String title) {
+        titleLabel.setText(title);
     }
 }

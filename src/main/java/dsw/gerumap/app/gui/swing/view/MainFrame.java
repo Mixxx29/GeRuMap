@@ -1,8 +1,12 @@
 package dsw.gerumap.app.gui.swing.view;
 
 import dsw.gerumap.app.core.App;
+import dsw.gerumap.app.gui.swing.actions.ActionManager;
+import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
+import dsw.gerumap.app.gui.swing.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.view.custom.CustomSplitPane;
 import dsw.gerumap.app.gui.swing.view.windows.TreeWindow;
+import dsw.gerumap.app.repository.models.Workspace;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,18 +20,20 @@ public class MainFrame extends JFrame {
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         UIManager.put("ToolTip.background", new Color(215, 215, 215));
         UIManager.put("MenuBar.background", new Color(80, 80, 80));
+        UIManager.put("Menu.background", new Color(80, 80, 80));
         UIManager.put("Menu.foreground", Color.white);
-        UIManager.put("Menu.selectionBackground", new Color(120, 120, 120));
+        UIManager.put("Menu.opaque", true);
+        UIManager.put("Menu.selectionBackground", new Color(150, 150, 150));
         UIManager.put("Menu.selectionForeground", Color.white);
         UIManager.put("Menu.border", new EmptyBorder(3, 1, 3, 1));
         UIManager.put("MenuItem.background", new Color(80, 80, 80));
         UIManager.put("MenuItem.foreground", Color.white);
-        UIManager.put("MenuItem.selectionBackground", new Color(120, 120, 120));
+        UIManager.put("MenuItem.selectionBackground", new Color(150, 150, 150));
         UIManager.put("MenuItem.selectionForeground", Color.white);
         UIManager.put("MenuItem.border", new EmptyBorder(3, 2, 3, 2));
         UIManager.put("Tree.background", new Color(80, 80, 80));
-        UIManager.put("Tree.selectionBackground", new Color(120, 120, 120));
-        UIManager.put("Tree.selectionBorderColor", new Color(200, 200, 200));
+        UIManager.put("Tree.selectionBackground", new Color(150, 150, 150));
+        UIManager.put("Tree.selectionBorderColor", new Color(150, 150, 150));
         UIManager.put("Panel.background", new Color(80, 80, 80));
         UIManager.put("SplitPane.border", new EmptyBorder(0, 0, 0, 0));
         UIManager.put("ScrollPane.border", new EmptyBorder(0, 0, 0, 0));
@@ -40,10 +46,11 @@ public class MainFrame extends JFrame {
         UIManager.put("TextField.caretForeground", Color.white);
     }
 
+    private ActionManager actionManager;
     private TreeWindow treeWindow;
 
     private MainFrame() {
-
+        actionManager = new ActionManager();
     }
 
     public static void initialise() {
@@ -65,15 +72,19 @@ public class MainFrame extends JFrame {
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("GeRuMap"); // Set window title
+        setIconImage(ResourceLoader.load("app.png", ResourceType.IMAGE));
 
         // Setup menu bar
         setJMenuBar(new MainMenuBar());
 
+        // Setup main toolbar
+        add(new MainToolBar(), BorderLayout.NORTH);
+
         // Create tree window
-        treeWindow = new TreeWindow(App.getRepository().getWorkspace().getName());
+        treeWindow = new TreeWindow();
 
         // Setup main split
-        CustomSplitPane mainSplit = new CustomSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JSplitPane mainSplit = new CustomSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         mainSplit.setDividerSize(4);
         mainSplit.setLeftComponent(treeWindow);
         mainSplit.setRightComponent(new JPanel());
@@ -85,7 +96,12 @@ public class MainFrame extends JFrame {
         return instance;
     }
 
+    public ActionManager getActionManager() {
+        return actionManager;
+    }
+
     public TreeWindow getTreeWindow() {
         return treeWindow;
     }
+
 }

@@ -12,5 +12,7 @@
         <maven.compiler.target>19</maven.compiler.target>
     </properties>
 
+    <dependencies>
 
+    </dependencies>
 </project>

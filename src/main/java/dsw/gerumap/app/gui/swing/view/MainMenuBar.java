@@ -1,5 +1,9 @@
 package dsw.gerumap.app.gui.swing.view;
 
+import dsw.gerumap.app.gui.swing.actions.ActionManager;
+import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
+import dsw.gerumap.app.gui.swing.resources.ResourceType;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -10,17 +14,57 @@ public class MainMenuBar extends JMenuBar {
     public MainMenuBar() {
         setBorder(new EmptyBorder(2, 2, 3, 2));
 
+        ActionManager actionManager = MainFrame.getInstance().getActionManager();
+
         // Crate 'File' menu
         JMenu fileMenu = new JMenu(" File ");
         fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Create 'Create' menu
+        JMenu createMenu = new JMenu(" Create ");
+        createMenu.setIcon(ResourceLoader.load("create.png", ResourceType.ICON));
+        createMenu.add(actionManager.getCreateFolderAction());
+        createMenu.add(actionManager.getCreateProjectAction());
+        createMenu.add(actionManager.getCreateMindMapAction());
+        fileMenu.add(createMenu);
+
+
+        fileMenu.add(createSeparator());
+
+        fileMenu.add(actionManager.getSaveAction());
+        fileMenu.add(actionManager.getSaveAsAction());
+
+        fileMenu.add(createSeparator());
+
+        fileMenu.add(actionManager.getExportAction());
+
         add(fileMenu);
 
         // Crate 'Edit' menu
         JMenu editMenu = new JMenu(" Edit ");
         editMenu.setMnemonic(KeyEvent.VK_E);
         editMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        editMenu.add(actionManager.getMindMapSettingsAction());
+        editMenu.add(createSeparator());
+        editMenu.add(actionManager.getRenameAction());
+        editMenu.add(actionManager.getDeleteAction());
         add(editMenu);
+
+        // Crate 'Help' menu
+        JMenu helpMenu = new JMenu(" Help ");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
+        helpMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        helpMenu.add(actionManager.getDevelopersAction());
+        helpMenu.add(actionManager.getAboutAction());
+        add(helpMenu);
+    }
+
+    private JSeparator createSeparator() {
+        JSeparator sep = new JSeparator();
+        sep.setBackground(new Color(150, 150, 150));
+        sep.setForeground(new Color(150, 150, 150));
+        return sep;
     }
 
     @Override

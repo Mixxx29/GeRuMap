@@ -7,4 +7,5 @@ import dsw.gerumap.app.repository.models.Workspace;
 public interface DataRepository {
     Workspace getWorkspace();
     void add(CompositeModelNode parent, ModelNode child);
+    void remove(CompositeModelNode parent, ModelNode child);
 }
