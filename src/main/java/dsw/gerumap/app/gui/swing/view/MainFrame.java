@@ -1,12 +1,10 @@
 package dsw.gerumap.app.gui.swing.view;
 
-import dsw.gerumap.app.core.App;
 import dsw.gerumap.app.gui.swing.actions.ActionManager;
-import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
-import dsw.gerumap.app.gui.swing.resources.ResourceType;
+import dsw.gerumap.app.resources.ResourceLoader;
+import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.view.custom.CustomSplitPane;
 import dsw.gerumap.app.gui.swing.view.windows.TreeWindow;
-import dsw.gerumap.app.repository.models.Workspace;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -44,6 +42,7 @@ public class MainFrame extends JFrame {
         UIManager.put("TextField.selectionBackground", new Color(180, 180, 180));
         UIManager.put("TextField.selectionForeground", new Color(50, 50, 50));
         UIManager.put("TextField.caretForeground", Color.white);
+        UIManager.put("Label.foreground", Color.white);
     }
 
     private ActionManager actionManager;
@@ -53,12 +52,14 @@ public class MainFrame extends JFrame {
         actionManager = new ActionManager();
     }
 
-    public static void initialise() {
+    public static MainFrame initialize() {
         if (instance == null) {
             instance = new MainFrame(); // Initialise new main frame
-            instance.initialiseGUI(); // Initialise main frame GUI
-            instance.setVisible(true); // Display main frame
+            instance.initialiseGUI();
+            instance.setVisible(true);
         }
+
+        return instance;
     }
 
     private void initialiseGUI() {

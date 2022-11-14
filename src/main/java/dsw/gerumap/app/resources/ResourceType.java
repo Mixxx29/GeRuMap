@@ -1,4 +1,4 @@
-package dsw.gerumap.app.gui.swing.resources;
+package dsw.gerumap.app.resources;
 
 public enum ResourceType {
     ICON,

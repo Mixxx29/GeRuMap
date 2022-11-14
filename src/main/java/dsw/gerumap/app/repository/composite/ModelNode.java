@@ -1,10 +1,20 @@
 package dsw.gerumap.app.repository.composite;
 
-public class ModelNode {
+import dsw.gerumap.app.observer.IListener;
+import dsw.gerumap.app.observer.IPublisher;
+import dsw.gerumap.app.observer.NotificationType;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class ModelNode implements IPublisher {
     private String name;
+    private CompositeModelNode parent;
+    private List<IListener> listeners;
 
     public ModelNode(String name) {
         this.name = name;
+        listeners = new ArrayList<>();
     }
 
     public String getName() {
@@ -13,5 +23,33 @@ public class ModelNode {
 
     public void setName(String name) {
         this.name = name;
+        notifyListeners(NotificationType.RENAME, this);
+    }
+
+    public CompositeModelNode getParent() {
+        return parent;
+    }
+
+    public void setParent(CompositeModelNode parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public void addListener(IListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeListener(IListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void notifyListeners(NotificationType notificationType, Object object) {
+        for (IListener listener : listeners) {
+            listener.update(notificationType, object);
+        }
     }
 }

@@ -2,6 +2,7 @@ package dsw.gerumap.app.core;
 
 import dsw.gerumap.app.gui.swing.SwingGUI;
 import dsw.gerumap.app.repository.LocalRepository;
+import dsw.gerumap.app.resources.ResourceLoader;
 
 public class App {
     private static App instance;
@@ -16,6 +17,7 @@ public class App {
 
     public static App initialize() {
         if (instance == null) {
+            ResourceLoader.initialise();
             instance = new App(new LocalRepository("WorkspaceTest"), new SwingGUI());
         }
         return instance;

@@ -1,8 +1,8 @@
 package dsw.gerumap.app.gui.swing.actions.file;
 
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
-import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
-import dsw.gerumap.app.gui.swing.resources.ResourceType;
+import dsw.gerumap.app.resources.ResourceLoader;
+import dsw.gerumap.app.resources.ResourceType;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

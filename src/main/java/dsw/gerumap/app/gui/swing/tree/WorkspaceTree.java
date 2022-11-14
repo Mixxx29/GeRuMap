@@ -5,6 +5,7 @@ import dsw.gerumap.app.gui.swing.tree.view.TreeView;
 import dsw.gerumap.app.repository.models.Workspace;
 
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 public class WorkspaceTree implements ITree {
 
@@ -13,7 +14,7 @@ public class WorkspaceTree implements ITree {
 
     @Override
     public TreeView generateView(Workspace workspace) {
-        TreeItem root = new TreeItem(workspace);
+        TreeItem root = new TreeItem(workspace, this);
         treeModel = new DefaultTreeModel(root);
         treeView = new TreeView(treeModel);
         return treeView;
@@ -26,11 +27,21 @@ public class WorkspaceTree implements ITree {
 
     @Override
     public TreeItem getSelected() {
-        return null;
+        return (TreeItem) treeView.getLastSelectedPathComponent();
     }
 
     @Override
     public void setSelected(TreeItem item) {
+        if (item == null) {
+            treeView.setSelectionPath(new TreePath(((TreeItem)treeModel.getRoot()).getPath()));
+            return;
+        }
 
+        treeView.setSelectionPath(new TreePath(item.getPath()));
+    }
+
+    @Override
+    public void refresh() {
+        treeView.updateUI();
     }
 }

@@ -5,6 +5,8 @@ import dsw.gerumap.app.repository.composite.ModelNode;
 
 public class Workspace extends CompositeModelNode {
 
+    public static final String DEFAULT_NAME = "New Workspace";
+
     public Workspace(String name) {
         super(name);
     }

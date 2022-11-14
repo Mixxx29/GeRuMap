@@ -1,10 +1,12 @@
 package dsw.gerumap.app.gui.swing.tree.view;
 
-import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
-import dsw.gerumap.app.gui.swing.resources.ResourceType;
+import dsw.gerumap.app.resources.ResourceLoader;
+import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 import dsw.gerumap.app.repository.composite.ModelNode;
 import dsw.gerumap.app.repository.models.Folder;
+import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.repository.models.Workspace;
 
 import javax.swing.*;
@@ -41,8 +43,14 @@ public class TreeCellRenderer extends DefaultTreeCellRenderer {
 
         ModelNode model = ((TreeItem)value).getModel();
 
-        if (model instanceof Folder || model instanceof Workspace) {
+        if (model instanceof Workspace) {
+            setIcon(ResourceLoader.load("workspace.png", ResourceType.ICON));
+        } else if (model instanceof Folder) {
             setIcon(ResourceLoader.load("folder.png", ResourceType.ICON));
+        } else if (model instanceof Project) {
+            setIcon(ResourceLoader.load("project.png", ResourceType.ICON));
+        } else if (model instanceof MindMap) {
+            setIcon(ResourceLoader.load("mind_map.png", ResourceType.ICON));
         }
 
         return this;

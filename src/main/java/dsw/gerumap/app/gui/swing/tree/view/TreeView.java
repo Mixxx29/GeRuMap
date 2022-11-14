@@ -2,9 +2,11 @@ package dsw.gerumap.app.gui.swing.tree.view;
 
 import dsw.gerumap.app.gui.swing.tree.controller.CustomTreeMouseListener;
 import dsw.gerumap.app.gui.swing.tree.controller.CustomTreeSelectionListener;
+import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 
 public class TreeView extends JTree {
 
@@ -19,7 +21,9 @@ public class TreeView extends JTree {
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
 
-        setSelectionRow(0);
+        setRootVisible(false);
+
+        setSelectionPath(new TreePath(((TreeItem)treeModel.getRoot()).getPath()));
     }
 
     public int getHoveredRow() {

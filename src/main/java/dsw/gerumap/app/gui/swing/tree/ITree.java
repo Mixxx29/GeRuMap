@@ -9,4 +9,6 @@ public interface ITree {
     void addItem(TreeItem item);
     TreeItem getSelected();
     void setSelected(TreeItem item);
+
+    void refresh();
 }

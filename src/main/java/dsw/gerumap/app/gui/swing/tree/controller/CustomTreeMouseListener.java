@@ -1,7 +1,9 @@
 package dsw.gerumap.app.gui.swing.tree.controller;
 
+import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 import dsw.gerumap.app.gui.swing.tree.view.TreeView;
 
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -25,7 +27,10 @@ public class CustomTreeMouseListener implements MouseListener, MouseMotionListen
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        int row = treeView.getRowForLocation(e.getX(), e.getY());
+        if (row == -1) {
+            treeView.setSelectionPath(new TreePath(((TreeItem)treeView.getModel().getRoot()).getPath()));
+        }
     }
 
     @Override

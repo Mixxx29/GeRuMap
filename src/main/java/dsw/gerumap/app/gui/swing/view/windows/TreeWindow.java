@@ -20,4 +20,8 @@ public class TreeWindow extends AbstractWindow {
         content.setBorder(new EmptyBorder(10, 10, 10, 10));
         add(content);
     }
+
+    public ITree getTree() {
+        return tree;
+    }
 }

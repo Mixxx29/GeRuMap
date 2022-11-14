@@ -1,8 +1,8 @@
 package dsw.gerumap.app.gui.swing.view;
 
 import dsw.gerumap.app.gui.swing.actions.ActionManager;
-import dsw.gerumap.app.gui.swing.resources.ResourceLoader;
-import dsw.gerumap.app.gui.swing.resources.ResourceType;
+import dsw.gerumap.app.resources.ResourceLoader;
+import dsw.gerumap.app.resources.ResourceType;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -28,17 +28,11 @@ public class MainMenuBar extends JMenuBar {
         createMenu.add(actionManager.getCreateProjectAction());
         createMenu.add(actionManager.getCreateMindMapAction());
         fileMenu.add(createMenu);
-
-
         fileMenu.add(createSeparator());
-
         fileMenu.add(actionManager.getSaveAction());
         fileMenu.add(actionManager.getSaveAsAction());
-
         fileMenu.add(createSeparator());
-
         fileMenu.add(actionManager.getExportAction());
-
         add(fileMenu);
 
         // Crate 'Edit' menu
