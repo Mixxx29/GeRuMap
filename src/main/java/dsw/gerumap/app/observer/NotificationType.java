@@ -5,5 +5,6 @@ public enum NotificationType {
     RENAME,
     DELETE,
     SELECTED,
-    SELECT
+    SELECT,
+    MESSAGE
 }

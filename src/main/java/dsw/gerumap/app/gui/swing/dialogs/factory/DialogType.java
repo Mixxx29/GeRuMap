@@ -4,4 +4,6 @@ public enum DialogType {
     CREATE,
     RENAME,
     DELETE,
+    DEVELOPERS,
+    ERROR
 }

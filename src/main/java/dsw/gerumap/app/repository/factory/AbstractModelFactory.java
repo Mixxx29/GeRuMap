@@ -6,7 +6,7 @@ import dsw.gerumap.app.repository.composite.ModelNode;
 public abstract class AbstractModelFactory {
 
     public ModelNode createModel(String name, CompositeModelNode parent) {
-        ModelNode model = createModel(name);
+        ModelNode model = createModel(name.trim());
         if (parent != null) parent.addNode(model);
         return model;
     }

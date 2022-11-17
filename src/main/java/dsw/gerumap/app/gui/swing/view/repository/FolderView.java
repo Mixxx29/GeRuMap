@@ -34,13 +34,6 @@ public class FolderView extends CompositeModelView {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                System.out.println("Kita");
-                if (!(e.getSource() instanceof FolderView)) return;
-                System.out.println("Kita2");
-
-                if (e.getSource() instanceof FolderView) {
-                    System.out.println(e.getSource());
-                }
 
                 // Select null
                 MainFrame.getInstance().getEditorWindow().selectPreview(null);

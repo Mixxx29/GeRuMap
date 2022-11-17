@@ -1,9 +1,6 @@
 package dsw.gerumap.app.gui.swing.dialogs.factory;
 
-import dsw.gerumap.app.gui.swing.dialogs.AbstractDialog;
-import dsw.gerumap.app.gui.swing.dialogs.CreateModelDialog;
-import dsw.gerumap.app.gui.swing.dialogs.DeleteModelDialog;
-import dsw.gerumap.app.gui.swing.dialogs.RenameModelDialog;
+import dsw.gerumap.app.gui.swing.dialogs.*;
 import dsw.gerumap.app.repository.composite.ModelNode;
 import dsw.gerumap.app.repository.factory.ModelType;
 
@@ -27,6 +24,14 @@ public class DialogFactory {
                 if (object instanceof ModelNode modelNode) {
                     return new RenameModelDialog(modelNode);
                 }
+            }
+
+            case DEVELOPERS -> {
+                return new DevelopersDialog();
+            }
+
+            case ERROR -> {
+                return new ErrorDialog();
             }
         }
 

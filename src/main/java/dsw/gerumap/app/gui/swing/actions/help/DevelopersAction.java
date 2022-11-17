@@ -1,8 +1,12 @@
 package dsw.gerumap.app.gui.swing.actions.help;
 
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
+import dsw.gerumap.app.gui.swing.dialogs.AbstractDialog;
+import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
+import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.factory.ModelType;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
@@ -26,7 +30,8 @@ public class DevelopersAction extends AbstractCustomAction {
 
     @Override
     public void action(Object object) {
-        System.out.println("About developers");
+        AbstractDialog dialog = DialogFactory.createDialog(DialogType.DEVELOPERS, null);
+        if (dialog != null) dialog.start(null);
     }
 
     @Override

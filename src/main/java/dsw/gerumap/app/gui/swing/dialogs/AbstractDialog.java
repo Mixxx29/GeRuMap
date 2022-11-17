@@ -11,6 +11,7 @@ public abstract class AbstractDialog extends JDialog {
     public AbstractDialog() {
         setModal(true);
         setLayout(null);
+        setResizable(false);
         getContentPane().setBackground(new Color(100, 100, 100));
         ((JPanel)getContentPane()).setBorder(new LineBorder(new Color(200, 200, 200), 1));
     }

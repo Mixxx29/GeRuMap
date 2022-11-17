@@ -28,6 +28,7 @@ public abstract class CompositeModelNode extends ModelNode {
     }
 
     public ModelNode getNode(String name) {
+        name = name.trim();
         Iterator<ModelNode> iterator = nodes.iterator();
         while (iterator.hasNext()) {
             ModelNode node = iterator.next();

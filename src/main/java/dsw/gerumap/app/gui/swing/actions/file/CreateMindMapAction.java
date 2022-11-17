@@ -1,9 +1,12 @@
 package dsw.gerumap.app.gui.swing.actions.file;
 
+import dsw.gerumap.app.core.App;
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
 import dsw.gerumap.app.gui.swing.dialogs.AbstractDialog;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
+import dsw.gerumap.app.message.MessageType;
+import dsw.gerumap.app.message.generator.error.ErrorType;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.models.Folder;
@@ -52,7 +55,7 @@ public class CreateMindMapAction extends AbstractCustomAction {
             name = (String) dialog.start(name);
             if (name == null) return;
             if (parent.getNode(name) == null) break;
-            System.out.println("Mind map already exists!");
+            App.getMessageGenerator().generateMessage(MessageType.ERROR, ErrorType.MIND_MAP_EXISTS.ordinal());
         }
 
         AbstractModelFactory factory = ModelFactoryManager.getFactory(ModelType.MIND_MAP);
