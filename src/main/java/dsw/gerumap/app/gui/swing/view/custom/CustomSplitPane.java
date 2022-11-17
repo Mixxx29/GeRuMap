@@ -8,8 +8,11 @@ import java.awt.*;
 
 public class CustomSplitPane extends JSplitPane {
 
-    public CustomSplitPane(int orientation) {
+    private double maxLocation;
+
+    public CustomSplitPane(int orientation, double maxLocation) {
         super(orientation);
+        this.maxLocation = maxLocation;
 
         setUI(new BasicSplitPaneUI() {
             @Override
@@ -27,6 +30,22 @@ public class CustomSplitPane extends JSplitPane {
                     }
                 };
             }
+
+            @Override
+            protected void dragDividerTo(int location) {
+                if (location > maxLocation * getParent().getWidth()) {
+                    location = (int)(maxLocation * getParent().getWidth());
+                }
+                super.dragDividerTo(location);
+            }
         });
+    }
+
+    @Override
+    public void setDividerLocation(int location) {
+        if (getParent() != null && location > maxLocation * getParent().getWidth()) {
+            location = (int)(maxLocation * getParent().getWidth());
+        }
+        super.setDividerLocation(location);
     }
 }

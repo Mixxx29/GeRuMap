@@ -4,6 +4,8 @@ import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
 import dsw.gerumap.app.gui.swing.dialogs.AbstractDialog;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
+import dsw.gerumap.app.observer.IPublisher;
+import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
@@ -22,7 +24,8 @@ import java.awt.event.KeyEvent;
 
 public class CreateProjectAction extends AbstractCustomAction {
 
-    public CreateProjectAction() {
+    public CreateProjectAction(IPublisher publisher) {
+        super(publisher);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_DOWN_MASK));
         putValue(SMALL_ICON, ResourceLoader.load("project.png", ResourceType.ICON));
         putValue(LARGE_ICON_KEY, ResourceLoader.load("create_project.png", ResourceType.ICON));
@@ -57,6 +60,17 @@ public class CreateProjectAction extends AbstractCustomAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        action(MainFrame.getInstance().getTreeWindow().getTree().getSelected().getModel());
+        action(selected);
+    }
+
+    @Override
+    public void update(NotificationType notificationType, Object object) {
+        super.update(notificationType, object);
+        if (notificationType == NotificationType.SELECTED) {
+            setEnabled(false);
+            if (object instanceof Folder) {
+                setEnabled(true);
+            }
+        }
     }
 }

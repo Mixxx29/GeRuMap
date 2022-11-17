@@ -27,17 +27,18 @@ public class WorkspaceTree implements ITree {
 
     @Override
     public TreeItem getSelected() {
-        return (TreeItem) treeView.getLastSelectedPathComponent();
+        return treeView.getSelected();
     }
 
     @Override
     public void setSelected(TreeItem item) {
-        if (item == null) {
-            treeView.setSelectionPath(new TreePath(((TreeItem)treeModel.getRoot()).getPath()));
-            return;
-        }
+        treeView.setSelected(item);
+    }
 
-        treeView.setSelectionPath(new TreePath(item.getPath()));
+    @Override
+    public void expandPath(TreeItem item) {
+        treeView.expandPath(new TreePath(item.getPath()));
+        treeView.updateUI();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package dsw.gerumap.app.gui.swing.view;
 
 import dsw.gerumap.app.gui.swing.actions.ActionManager;
+import dsw.gerumap.app.gui.swing.view.windows.EditorWindow;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.view.custom.CustomSplitPane;
@@ -29,7 +30,7 @@ public class MainFrame extends JFrame {
         UIManager.put("MenuItem.selectionBackground", new Color(150, 150, 150));
         UIManager.put("MenuItem.selectionForeground", Color.white);
         UIManager.put("MenuItem.border", new EmptyBorder(3, 2, 3, 2));
-        UIManager.put("Tree.background", new Color(80, 80, 80));
+        UIManager.put("Tree.background", new Color(90, 90, 90));
         UIManager.put("Tree.selectionBackground", new Color(150, 150, 150));
         UIManager.put("Tree.selectionBorderColor", new Color(150, 150, 150));
         UIManager.put("Panel.background", new Color(80, 80, 80));
@@ -47,6 +48,7 @@ public class MainFrame extends JFrame {
 
     private ActionManager actionManager;
     private TreeWindow treeWindow;
+    private EditorWindow editorWindow;
 
     private MainFrame() {
         actionManager = new ActionManager();
@@ -84,11 +86,14 @@ public class MainFrame extends JFrame {
         // Create tree window
         treeWindow = new TreeWindow();
 
+        // Create editor window
+        editorWindow = new EditorWindow();
+
         // Setup main split
-        JSplitPane mainSplit = new CustomSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JSplitPane mainSplit = new CustomSplitPane(JSplitPane.HORIZONTAL_SPLIT, 0.5);
         mainSplit.setDividerSize(4);
         mainSplit.setLeftComponent(treeWindow);
-        mainSplit.setRightComponent(new JPanel());
+        mainSplit.setRightComponent(editorWindow);
         mainSplit.setDividerLocation((int)(windowSize.width * 0.25f));
         add(mainSplit, BorderLayout.CENTER);
     }
@@ -105,4 +110,7 @@ public class MainFrame extends JFrame {
         return treeWindow;
     }
 
+    public EditorWindow getEditorWindow() {
+        return editorWindow;
+    }
 }

@@ -1,13 +1,22 @@
 package dsw.gerumap.app.gui.swing.actions;
 
 import dsw.gerumap.app.gui.swing.actions.edit.DeleteAction;
-import dsw.gerumap.app.gui.swing.actions.edit.MindMapSettingsAction;
+import dsw.gerumap.app.gui.swing.actions.edit.ProjectSettingsAction;
 import dsw.gerumap.app.gui.swing.actions.edit.RenameAction;
 import dsw.gerumap.app.gui.swing.actions.file.*;
 import dsw.gerumap.app.gui.swing.actions.help.AboutAction;
 import dsw.gerumap.app.gui.swing.actions.help.DevelopersAction;
+import dsw.gerumap.app.observer.IListener;
+import dsw.gerumap.app.observer.IPublisher;
+import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.composite.ModelNode;
 
-public class ActionManager {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ActionManager implements IPublisher {
+
+    private List<IListener> listeners;
 
     private CreateFolderAction createFolderAction;
     private CreateProjectAction createProjectAction;
@@ -18,25 +27,46 @@ public class ActionManager {
 
     private RenameAction renameAction;
     private DeleteAction deleteAction;
-    private MindMapSettingsAction mindMapSettingsAction;
+    private ProjectSettingsAction mindMapSettingsAction;
 
     private DevelopersAction developersAction;
     private AboutAction aboutAction;
 
     public ActionManager() {
-        createFolderAction = new CreateFolderAction();
-        createProjectAction = new CreateProjectAction();
-        createMindMapAction = new CreateMindMapAction();
-        saveAction = new SaveAction();
-        saveAsAction = new SaveAsAction();
-        exportAction = new ExportAction();
+        listeners = new ArrayList<>();
 
-        renameAction = new RenameAction();
-        deleteAction = new DeleteAction();
-        mindMapSettingsAction = new MindMapSettingsAction();
+        createFolderAction = new CreateFolderAction(this);
+        createProjectAction = new CreateProjectAction(this);
+        createMindMapAction = new CreateMindMapAction(this);
+        saveAction = new SaveAction(this);
+        saveAsAction = new SaveAsAction(this);
+        exportAction = new ExportAction(this);
 
-        developersAction = new DevelopersAction();
-        aboutAction = new AboutAction();
+        renameAction = new RenameAction(this);
+        deleteAction = new DeleteAction(this);
+        mindMapSettingsAction = new ProjectSettingsAction(this);
+
+        developersAction = new DevelopersAction(this);
+        aboutAction = new AboutAction(this);
+    }
+
+    @Override
+    public void addListener(IListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeListener(IListener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void notifyListeners(NotificationType notificationType, Object object) {
+        for (IListener listener : listeners) {
+            listener.update(notificationType, object);
+        }
     }
 
     public CreateFolderAction getCreateFolderAction() {
@@ -63,7 +93,7 @@ public class ActionManager {
         return exportAction;
     }
 
-    public MindMapSettingsAction getMindMapSettingsAction() {
+    public ProjectSettingsAction getMindMapSettingsAction() {
         return mindMapSettingsAction;
     }
 

@@ -6,6 +6,7 @@ import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.composite.ModelNode;
+import dsw.gerumap.app.repository.models.Project;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -40,16 +41,24 @@ public class TreeItem extends DefaultMutableTreeNode implements IListener {
                 if (object instanceof ModelNode modelNode) {
                     TreeItem newItem = new TreeItem(modelNode, tree);
                     add(newItem);
-                    tree.setSelected(newItem);
+                    tree.setSelected(this);
+                    tree.expandPath(this);
                 }
             }
 
             case DELETE -> {
-                tree.setSelected((TreeItem) parent);
+                TreeItem itemParent = (TreeItem) parent;
                 parent.remove(this);
+                tree.setSelected(itemParent);
+            }
+
+            case RENAME -> {
+                tree.refresh();
+            }
+
+            case SELECT -> {
+                tree.setSelected(this);
             }
         }
-
-        tree.refresh();
     }
 }

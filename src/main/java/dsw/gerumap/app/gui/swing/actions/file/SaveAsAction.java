@@ -1,6 +1,8 @@
 package dsw.gerumap.app.gui.swing.actions.file;
 
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
+import dsw.gerumap.app.observer.IPublisher;
+import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
@@ -11,7 +13,8 @@ import java.awt.event.KeyEvent;
 
 public class SaveAsAction extends AbstractCustomAction {
 
-    public SaveAsAction() {
+    public SaveAsAction(IPublisher publisher) {
+        super(publisher);
         putValue(
                 ACCELERATOR_KEY,
                 KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
@@ -29,5 +32,10 @@ public class SaveAsAction extends AbstractCustomAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         action(null);
+    }
+
+    @Override
+    public void update(NotificationType notificationType, Object object) {
+
     }
 }

@@ -10,5 +10,7 @@ public interface ITree {
     TreeItem getSelected();
     void setSelected(TreeItem item);
 
+    void expandPath(TreeItem item);
+
     void refresh();
 }

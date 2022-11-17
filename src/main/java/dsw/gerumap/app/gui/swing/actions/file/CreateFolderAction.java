@@ -1,9 +1,13 @@
 package dsw.gerumap.app.gui.swing.actions.file;
 
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
+import dsw.gerumap.app.gui.swing.actions.ActionManager;
 import dsw.gerumap.app.gui.swing.dialogs.AbstractDialog;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
+import dsw.gerumap.app.observer.IPublisher;
+import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.composite.ModelNode;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
@@ -21,7 +25,8 @@ import java.awt.event.KeyEvent;
 
 public class CreateFolderAction extends AbstractCustomAction {
 
-    public CreateFolderAction() {
+    public CreateFolderAction(IPublisher publisher) {
+        super(publisher);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
         putValue(SMALL_ICON, ResourceLoader.load("folder.png", ResourceType.ICON));
         putValue(LARGE_ICON_KEY, ResourceLoader.load("create_folder.png", ResourceType.ICON));
@@ -56,6 +61,17 @@ public class CreateFolderAction extends AbstractCustomAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        action(MainFrame.getInstance().getTreeWindow().getTree().getSelected().getModel());
+        action(selected);
+    }
+
+    @Override
+    public void update(NotificationType notificationType, Object object) {
+        super.update(notificationType, object);
+        if (notificationType == NotificationType.SELECTED) {
+            setEnabled(false);
+            if (object instanceof Folder) {
+                setEnabled(true);
+            }
+        }
     }
 }

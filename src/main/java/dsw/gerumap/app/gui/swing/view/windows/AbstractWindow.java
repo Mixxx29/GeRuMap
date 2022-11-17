@@ -11,12 +11,12 @@ public abstract class AbstractWindow extends JPanel {
     private JLabel titleLabel;
     protected JPanel content;
 
-    public AbstractWindow(String title) {
+    public AbstractWindow() {
         // Set layout
         setLayout(new BorderLayout());
 
         // Create title label
-        titleLabel = new JLabel(title, SwingConstants.CENTER);
+        titleLabel = new JLabel("", SwingConstants.CENTER);
         titleLabel.setForeground(Color.WHITE);
         titleLabel.setBorder(new EmptyBorder(5, 0, 6, 0));
 
@@ -34,6 +34,7 @@ public abstract class AbstractWindow extends JPanel {
         add(titleLabelPanel, BorderLayout.NORTH);
 
         content = new JPanel(new BorderLayout());
+        add(content);
     }
 
     public void setTitle(String title) {

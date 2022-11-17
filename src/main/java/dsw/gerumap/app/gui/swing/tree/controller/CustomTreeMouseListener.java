@@ -1,9 +1,8 @@
 package dsw.gerumap.app.gui.swing.tree.controller;
 
-import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
+import dsw.gerumap.app.gui.swing.view.custom.CustomContextMenu;
 import dsw.gerumap.app.gui.swing.tree.view.TreeView;
 
-import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -27,9 +26,20 @@ public class CustomTreeMouseListener implements MouseListener, MouseMotionListen
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        treeView.setSelected(null);
+        treeView.requestFocus();
+
+        // Select item under
         int row = treeView.getRowForLocation(e.getX(), e.getY());
-        if (row == -1) {
-            treeView.setSelectionPath(new TreePath(((TreeItem)treeView.getModel().getRoot()).getPath()));
+        if (row != -1) {
+            treeView.setSelectionRow(row);
+        }
+
+        // Check if right mouse button
+        if (e.getButton() == MouseEvent.BUTTON3) {
+            // !!!UPGRADE!!! Chow context menu
+            new CustomContextMenu(treeView.getSelected().getModel()).show(treeView, e.getX(), e.getY());
+
         }
     }
 
@@ -56,4 +66,5 @@ public class CustomTreeMouseListener implements MouseListener, MouseMotionListen
         if (treeView.getHoveredRow() == row) return;
         treeView.setHoveredRow(row);
     }
+
 }

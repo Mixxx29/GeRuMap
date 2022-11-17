@@ -5,8 +5,12 @@ import dsw.gerumap.app.gui.swing.tree.controller.CustomTreeSelectionListener;
 import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class TreeView extends JTree {
 
@@ -21,9 +25,12 @@ public class TreeView extends JTree {
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
 
+        setBackground(new Color(90, 90, 90));
+        setBorder(new EmptyBorder(10, 10, 10, 10));
+
         setRootVisible(false);
 
-        setSelectionPath(new TreePath(((TreeItem)treeModel.getRoot()).getPath()));
+        setSelected(null);
     }
 
     public int getHoveredRow() {
@@ -35,4 +42,16 @@ public class TreeView extends JTree {
         updateUI();
     }
 
+    public void setSelected(TreeItem item) {
+        if (item != null) {
+            setSelectionPath(new TreePath(item.getPath()));
+        } else {
+            setSelectionPath(new TreePath(((TreeItem)treeModel.getRoot()).getPath()));
+        }
+        updateUI();
+    }
+
+    public TreeItem getSelected() {
+        return (TreeItem) getLastSelectedPathComponent();
+    }
 }
