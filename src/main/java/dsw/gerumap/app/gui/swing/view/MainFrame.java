@@ -1,5 +1,6 @@
 package dsw.gerumap.app.gui.swing.view;
 
+import dsw.gerumap.app.core.App;
 import dsw.gerumap.app.gui.swing.actions.ActionManager;
 import dsw.gerumap.app.gui.swing.view.windows.EditorWindow;
 import dsw.gerumap.app.resources.ResourceLoader;
@@ -57,14 +58,12 @@ public class MainFrame extends JFrame {
     public static MainFrame initialize() {
         if (instance == null) {
             instance = new MainFrame(); // Initialise new main frame
-            instance.initialiseGUI();
-            instance.setVisible(true);
         }
 
         return instance;
     }
 
-    private void initialiseGUI() {
+    public void initialiseGUI() {
         // Setup main frame GUI
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension windowSize = toolkit.getScreenSize();
@@ -74,7 +73,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null); // Center on screen
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximize window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("GeRuMap"); // Set window title
+        setTitle("GeRuMap - "  + App.getRepository().getWorkspace().getName()); // Set window title
         setIconImage(ResourceLoader.load("app.png", ResourceType.IMAGE));
 
         // Setup menu bar
@@ -82,6 +81,18 @@ public class MainFrame extends JFrame {
 
         // Setup main toolbar
         add(new MainToolBar(), BorderLayout.NORTH);
+
+        // Setup status bar
+        JPanel statusBarPanel = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+                g.setColor(new Color(150, 150, 150));
+                g.drawLine(0, 0, getWidth() - 1, 0);
+            }
+        };
+        statusBarPanel.setPreferredSize(new Dimension(0, 30));
+        add(statusBarPanel, BorderLayout.SOUTH);
 
         // Create tree window
         treeWindow = new TreeWindow();

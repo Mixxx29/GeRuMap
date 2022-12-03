@@ -33,10 +33,9 @@ public class FolderView extends CompositeModelView {
 
         addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseReleased(MouseEvent e) {
-
+            public void mousePressed(MouseEvent e) {
                 // Select null
-                MainFrame.getInstance().getEditorWindow().selectPreview(null);
+               selectPreview(null);
 
                 // Update actions
                 MainFrame.getInstance().getActionManager().notifyListeners(NotificationType.SELECTED, model);
@@ -53,9 +52,9 @@ public class FolderView extends CompositeModelView {
     @Override
     public void addView(ModelView view) {
         if (!(view instanceof FolderView) && !(view instanceof ProjectView)) return;
-        content.add(view, view.getName());
-        MainFrame.getInstance().getEditorWindow().selectPreview(view.getPreview());
         super.addView(view);
+        content.add(view, view.getName());
+        selectPreview(view.getPreview());
         if (view instanceof ProjectView) {
             view.getModel().notifyListeners(NotificationType.SELECT, null);
             ((Project)view.getModel()).addNode(new MindMap(MindMap.DEFAULT_NAME));
@@ -65,13 +64,12 @@ public class FolderView extends CompositeModelView {
     @Override
     public void removeView(ModelView view) {
         if (!(view instanceof FolderView) && !(view instanceof ProjectView)) return;
-        content.remove(view);
         super.removeView(view);
+        content.remove(view);
     }
 
     @Override
     public void update(NotificationType notificationType, Object object) {
-        super.update(notificationType, object);
         switch (notificationType) {
             case CREATE -> {
                 if (object instanceof ModelNode modelNode) {
@@ -85,9 +83,9 @@ public class FolderView extends CompositeModelView {
 
             case RENAME -> {
                 getParent().add(this, model.getName());
-                ((CardLayout)getParent().getLayout()).show(getParent(), model.getName());
             }
         }
+        super.update(notificationType, object);
     }
 
     @Override
@@ -131,13 +129,14 @@ public class FolderView extends CompositeModelView {
     @Override
     public void display() {
         super.display();
-        MainFrame.getInstance().getEditorWindow().selectPreview(null);
+        selectPreview(null);
         ((CardLayout)content.getLayout()).show(content, "Previews");
+        displayed = null;
     }
 
     @Override
-    public void display(ModelView view) {
-        super.display(view);
+    public void displayView(ModelView view) {
+        super.displayView(view);
         ((CardLayout)content.getLayout()).show(content, view.getName());
     }
 }

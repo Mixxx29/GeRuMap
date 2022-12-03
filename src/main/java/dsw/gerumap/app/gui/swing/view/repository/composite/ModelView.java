@@ -23,22 +23,17 @@ public abstract class ModelView extends JPanel implements IListener {
     protected ModelPreview preview;
     protected CompositeModelView parentView;
 
-
     public ModelView(ModelNode model) {
         this.model = model;
         model.addListener(this);
 
-        preview = ModelPreview.createPreview(model);
+        preview = ModelPreview.createPreview(this);
 
         setLayout(new BorderLayout());
-
-        setMinimumSize(new Dimension(200, 0));
-
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 updateView();
-                super.componentResized(e);
             }
         });
     }
@@ -66,17 +61,29 @@ public abstract class ModelView extends JPanel implements IListener {
 
     public void display() {
         if (parentView == null) return;
-        parentView.display(this);
+        parentView.displayView(this);
     }
 
     @Override
     public void update(NotificationType notificationType, Object object) {
         switch (notificationType) {
             case SELECTED -> {
-                MainFrame.getInstance().getEditorWindow().setDisplayedViewName(model.getName());
+                MainFrame.getInstance().getEditorWindow().setPath(model);
                 display();
             }
+
+            case RENAME -> {
+                if (isDisplayed()) {
+                    display();
+                }
+            }
         }
+    }
+
+    public boolean isDisplayed() {
+        if (getParentView() == null) return true;
+        if (!getParentView().isDisplayed()) return false;
+        return getParentView().getDisplayed() == this;
     }
 
     public static ModelView createView(ModelNode model) {

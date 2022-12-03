@@ -11,6 +11,8 @@ public abstract class AbstractWindow extends JPanel {
     private JLabel titleLabel;
     protected JPanel content;
 
+    protected JPanel titleLabelPanel;
+
     public AbstractWindow() {
         // Set layout
         setLayout(new BorderLayout());
@@ -21,7 +23,7 @@ public abstract class AbstractWindow extends JPanel {
         titleLabel.setBorder(new EmptyBorder(5, 0, 6, 0));
 
         // Create title label panel
-        JPanel titleLabelPanel = new JPanel(new BorderLayout()) {
+        titleLabelPanel = new JPanel(new BorderLayout()) {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);

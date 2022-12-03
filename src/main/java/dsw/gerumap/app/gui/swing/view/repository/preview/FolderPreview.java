@@ -1,5 +1,6 @@
 package dsw.gerumap.app.gui.swing.view.repository.preview;
 
+import dsw.gerumap.app.gui.swing.view.repository.FolderView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.ModelView;
 import dsw.gerumap.app.observer.NotificationType;
@@ -14,10 +15,10 @@ import java.awt.*;
 
 public class FolderPreview extends ModelPreview {
 
-    private JLabel nameLabel;
+    private final JLabel nameLabel;
 
-    public FolderPreview(Folder folder) {
-        super(folder);
+    public FolderPreview(FolderView folderView) {
+        super(folderView);
 
         // Set layout
         setLayout(new GridBagLayout());
@@ -32,7 +33,7 @@ public class FolderPreview extends ModelPreview {
         add(iconLabel, constraints);
 
         // Create name label
-        nameLabel = new JLabel(folder.getName());
+        nameLabel = new JLabel(folderView.getName());
         constraints.gridx = 0;
         constraints.gridy = 1;
         add(nameLabel, constraints);
@@ -42,7 +43,7 @@ public class FolderPreview extends ModelPreview {
     public void update(NotificationType notificationType, Object object) {
         switch (notificationType) {
             case RENAME -> {
-                nameLabel.setText(model.getName());
+                nameLabel.setText(view.getName());
             }
         }
     }

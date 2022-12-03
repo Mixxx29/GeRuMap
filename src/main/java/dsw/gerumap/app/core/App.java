@@ -32,12 +32,13 @@ public class App {
     public static App initialize() {
         if (instance == null) {
             ResourceLoader.initialise();
-            instance = new App(new LocalRepository("WorkspaceTest"), new SwingGUI());
+            instance = new App(new LocalRepository(), new SwingGUI());
         }
         return instance;
     }
 
     public void run() {
+        repository.load();
         gui.run();
     }
 

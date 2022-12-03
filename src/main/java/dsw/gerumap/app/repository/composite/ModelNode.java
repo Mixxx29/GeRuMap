@@ -5,6 +5,7 @@ import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public abstract class ModelNode implements IPublisher {
@@ -48,7 +49,8 @@ public abstract class ModelNode implements IPublisher {
 
     @Override
     public void notifyListeners(NotificationType notificationType, Object object) {
-        for (IListener listener : listeners) {
+        List<IListener> listenersCopy = new ArrayList<>(listeners);
+        for (IListener listener : listenersCopy) {
             listener.update(notificationType, object);
         }
     }

@@ -1,5 +1,6 @@
 package dsw.gerumap.app.gui.swing.view.repository.preview;
 
+import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.composite.ModelNode;
@@ -15,8 +16,8 @@ public class ProjectPreview extends ModelPreview {
 
     private JLabel nameLabel;
 
-    public ProjectPreview(Project project) {
-        super(project);
+    public ProjectPreview(ProjectView projectView) {
+        super(projectView);
 
         // Set layout
         setLayout(new GridBagLayout());
@@ -31,7 +32,7 @@ public class ProjectPreview extends ModelPreview {
         add(iconLabel, constraints);
 
         // Create name label
-        nameLabel = new JLabel(project.getName());
+        nameLabel = new JLabel(projectView.getName());
         constraints.gridx = 0;
         constraints.gridy = 1;
         add(nameLabel, constraints);
@@ -41,7 +42,7 @@ public class ProjectPreview extends ModelPreview {
     public void update(NotificationType notificationType, Object object) {
         switch (notificationType) {
             case RENAME -> {
-                nameLabel.setText(model.getName());
+                nameLabel.setText(view.getName());
             }
         }
     }
