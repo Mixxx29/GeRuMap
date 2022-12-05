@@ -45,6 +45,19 @@ public class MainMenuBar extends JMenuBar {
         editMenu.add(actionManager.getDeleteAction());
         add(editMenu);
 
+        // Crate 'Project' menu
+        JMenu projectMenu = new JMenu(" Project ");
+        projectMenu.setMnemonic(KeyEvent.VK_P);
+        projectMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        projectMenu.add(actionManager.getSelectToolAction());
+        projectMenu.add(actionManager.getMoveToolAction());
+        projectMenu.add(actionManager.getZoomToolAction());
+        projectMenu.add(actionManager.getEraseToolAction());
+        projectMenu.add(createSeparator());
+        projectMenu.add(actionManager.getTermToolAction());
+        projectMenu.add(actionManager.getLinkToolAction());
+        add(projectMenu);
+
         // Crate 'Help' menu
         JMenu helpMenu = new JMenu(" Help ");
         helpMenu.setMnemonic(KeyEvent.VK_H);

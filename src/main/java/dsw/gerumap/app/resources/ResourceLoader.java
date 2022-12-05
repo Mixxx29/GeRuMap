@@ -27,6 +27,10 @@ public class ResourceLoader {
             case IMAGE -> {
                 return (T)instance.loadImage(filename);
             }
+
+            case CURSOR -> {
+                return (T)instance.loadCursor(filename);
+            }
         }
 
         return null;
@@ -52,5 +56,48 @@ public class ResourceLoader {
         }
 
         return new ImageIcon(iconURL).getImage();
+    }
+
+    private Cursor loadCursor(String path) {
+        Point offset = new Point(0, 0);
+        switch (path) {
+            case "SELECTION_CURSOR" -> {
+                path = "selection_cursor.png";
+            }
+
+            case "MOVE_CURSOR" -> {
+                offset = new Point(16, 16);
+                path = "move_cursor.png";
+            }
+
+            case "ERASER_CURSOR" -> {
+                offset = new Point(16, 31);
+                path = "eraser_cursor.png";
+            }
+
+            case "TERM_CURSOR" -> {
+                path = "term_cursor.png";
+            }
+
+            case "LINK_CURSOR" -> {
+                path = "link_cursor.png";
+            }
+
+            case "ZOOM_CURSOR" -> {
+                offset = new Point(16, 16);
+                path = "zoom_cursor.png";
+            }
+
+            default -> {
+                return null;
+            }
+        }
+        Image image = loadImage("../cursors/" + path);
+        if (image == null) return null;
+        return Toolkit.getDefaultToolkit().createCustomCursor(
+                image,
+                offset,
+                "Custom Cursor"
+        );
     }
 }

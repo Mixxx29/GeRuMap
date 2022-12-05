@@ -3,6 +3,7 @@ package dsw.gerumap.app.gui.swing.view.windows;
 import dsw.gerumap.app.core.App;
 import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 import dsw.gerumap.app.gui.swing.view.custom.PathItem;
+import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
 import dsw.gerumap.app.gui.swing.view.repository.WorkspaceView;
 import dsw.gerumap.app.gui.swing.view.repository.preview.ModelPreview;
 import dsw.gerumap.app.observer.NotificationType;
@@ -23,9 +24,10 @@ import java.util.List;
 public class EditorWindow extends AbstractWindow {
 
     private final WorkspaceView workspaceView;
+    private ProjectView activeProjectView;
     private final JLabel back;
-
     private ModelNode model;
+    private final JPanel wrapper;
 
     public EditorWindow() {
         workspaceView = new WorkspaceView(App.getRepository().getWorkspace());
@@ -33,7 +35,7 @@ public class EditorWindow extends AbstractWindow {
         back = new JLabel(ResourceLoader.<ImageIcon>load("back_arrow.png", ResourceType.ICON));
         back.setCursor(new Cursor(Cursor.HAND_CURSOR));
         back.setToolTipText("Go Back");
-        back.setPreferredSize(new Dimension(30, 30));
+        back.setPreferredSize(new Dimension(35, 35));
         back.setBackground(new Color(150, 150, 150));
         back.addMouseListener(new MouseAdapter() {
             @Override
@@ -61,7 +63,7 @@ public class EditorWindow extends AbstractWindow {
         content.add(workspaceView, workspaceView.getName());
 
         titleLabelPanel = new JPanel(new GridBagLayout());
-        JPanel wrapper = new JPanel(new BorderLayout()) {
+        wrapper = new JPanel(new BorderLayout()) {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
@@ -69,7 +71,6 @@ public class EditorWindow extends AbstractWindow {
                 g.drawLine(0, getHeight() - 1, getWidth() - 1, getHeight() - 1);
             }
         };
-        wrapper.setBorder(new EmptyBorder(10, 20, 11, 0));
         wrapper.add(titleLabelPanel, BorderLayout.WEST);
         add(wrapper, BorderLayout.NORTH);
 
@@ -94,11 +95,13 @@ public class EditorWindow extends AbstractWindow {
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
+        wrapper.setBorder(new EmptyBorder(10, 15, 11, 0));
         if (model.getParent() != null) {
-            constraints.insets = new Insets(0, 0, 0, 20);
+            constraints.insets = new Insets(0, 0, 0, 15);
             titleLabelPanel.add(back, constraints);
             constraints.gridx++;
             constraints.insets = new Insets(0, 0, 0, 0);
+            wrapper.setBorder(new EmptyBorder(8, 15, 9, 0));
         }
         for (int i = path.size() - 1; i >= 0; i--) {
             PathItem item = path.get(i);
@@ -111,5 +114,13 @@ public class EditorWindow extends AbstractWindow {
         }
 
         titleLabelPanel.updateUI();
+    }
+
+    public ProjectView getActiveProjectView() {
+        return activeProjectView;
+    }
+
+    public void setActiveProjectView(ProjectView activeProjectView) {
+        this.activeProjectView = activeProjectView;
     }
 }

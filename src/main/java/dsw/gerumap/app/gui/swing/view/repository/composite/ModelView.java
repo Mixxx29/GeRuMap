@@ -62,6 +62,7 @@ public abstract class ModelView extends JPanel implements IListener {
     public void display() {
         if (parentView == null) return;
         parentView.displayView(this);
+        MainFrame.getInstance().getEditorWindow().setActiveProjectView(null);
     }
 
     @Override

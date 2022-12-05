@@ -6,10 +6,10 @@ import dsw.gerumap.app.gui.swing.actions.edit.RenameAction;
 import dsw.gerumap.app.gui.swing.actions.file.*;
 import dsw.gerumap.app.gui.swing.actions.help.AboutAction;
 import dsw.gerumap.app.gui.swing.actions.help.DevelopersAction;
+import dsw.gerumap.app.gui.swing.actions.project.*;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
-import dsw.gerumap.app.repository.composite.ModelNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +29,13 @@ public class ActionManager implements IPublisher {
     private DeleteAction deleteAction;
     private ProjectSettingsAction mindMapSettingsAction;
 
+    private SelectToolAction selectToolAction;
+    private MoveToolAction moveToolAction;
+    private ZoomToolAction zoomToolAction;
+    private EraseToolAction eraseToolAction;
+    private TermToolAction termToolAction;
+    private LinkToolAction linkToolAction;
+
     private DevelopersAction developersAction;
     private AboutAction aboutAction;
 
@@ -45,6 +52,13 @@ public class ActionManager implements IPublisher {
         renameAction = new RenameAction(this);
         deleteAction = new DeleteAction(this);
         mindMapSettingsAction = new ProjectSettingsAction(this);
+
+        selectToolAction = new SelectToolAction(this);
+        moveToolAction = new MoveToolAction(this);
+        zoomToolAction = new ZoomToolAction(this);
+        eraseToolAction = new EraseToolAction(this);
+        termToolAction = new TermToolAction(this);
+        linkToolAction = new LinkToolAction(this);
 
         developersAction = new DevelopersAction(this);
         aboutAction = new AboutAction(this);
@@ -103,6 +117,30 @@ public class ActionManager implements IPublisher {
 
     public DeleteAction getDeleteAction() {
         return deleteAction;
+    }
+
+    public SelectToolAction getSelectToolAction() {
+        return selectToolAction;
+    }
+
+    public MoveToolAction getMoveToolAction() {
+        return moveToolAction;
+    }
+
+    public ZoomToolAction getZoomToolAction() {
+        return zoomToolAction;
+    }
+
+    public EraseToolAction getEraseToolAction() {
+        return eraseToolAction;
+    }
+
+    public TermToolAction getTermToolAction() {
+        return termToolAction;
+    }
+
+    public LinkToolAction getLinkToolAction() {
+        return linkToolAction;
     }
 
     public DevelopersAction getDevelopersAction() {
