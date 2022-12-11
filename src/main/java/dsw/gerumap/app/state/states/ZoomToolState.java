@@ -1,27 +1,15 @@
 package dsw.gerumap.app.state.states;
 
-import dsw.gerumap.app.state.IState;
+import dsw.gerumap.app.gui.swing.view.cursor.CursorType;
+import dsw.gerumap.app.gui.swing.view.cursor.CustomCursor;
+import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
+import dsw.gerumap.app.state.AbstractState;
 
 import java.awt.event.MouseEvent;
 
-public class ZoomToolState implements IState {
+public class ZoomToolState extends AbstractState {
 
     public ZoomToolState() {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
+        cursor = CustomCursor.getCursor(CursorType.ZOOM_CURSOR);
     }
 }

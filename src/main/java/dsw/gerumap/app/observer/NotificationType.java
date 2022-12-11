@@ -6,5 +6,8 @@ public enum NotificationType {
     DELETE,
     SELECTED,
     SELECT,
-    MESSAGE
+    MESSAGE,
+    ADD_ELEMENT,
+    UPDATE_ELEMENT,
+    REMOVE_ELEMENT
 }

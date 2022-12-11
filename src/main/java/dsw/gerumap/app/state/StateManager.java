@@ -4,7 +4,7 @@ import dsw.gerumap.app.state.states.*;
 
 public class StateManager {
 
-    private IState current;
+    private AbstractState current;
 
     private SelectionToolState selectionToolState;
     private MoveToolState moveToolState;
@@ -24,6 +24,10 @@ public class StateManager {
         linkToolState = new LinkToolState();
 
         setSelectionToolState();
+    }
+
+    public AbstractState getCurrent() {
+        return current;
     }
 
     public void setSelectionToolState() {

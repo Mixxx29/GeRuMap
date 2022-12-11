@@ -1,16 +1,11 @@
 package dsw.gerumap.app.gui.swing.view.repository.preview;
 
-import dsw.gerumap.app.gui.swing.view.repository.FolderView;
-import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
-import dsw.gerumap.app.gui.swing.view.repository.composite.ModelView;
+import dsw.gerumap.app.gui.swing.view.repository.models.FolderView;
 import dsw.gerumap.app.observer.NotificationType;
-import dsw.gerumap.app.repository.composite.ModelNode;
-import dsw.gerumap.app.repository.models.Folder;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class FolderPreview extends ModelPreview {

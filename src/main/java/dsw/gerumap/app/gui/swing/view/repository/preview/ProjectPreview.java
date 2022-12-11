@@ -1,15 +1,11 @@
 package dsw.gerumap.app.gui.swing.view.repository.preview;
 
-import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
-import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
+import dsw.gerumap.app.gui.swing.view.repository.models.ProjectView;
 import dsw.gerumap.app.observer.NotificationType;
-import dsw.gerumap.app.repository.composite.ModelNode;
-import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class ProjectPreview extends ModelPreview {

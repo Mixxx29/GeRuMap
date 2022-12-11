@@ -2,18 +2,13 @@ package dsw.gerumap.app.gui.swing.view.repository.preview;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.gui.swing.view.custom.CustomContextMenu;
-import dsw.gerumap.app.gui.swing.view.repository.FolderView;
-import dsw.gerumap.app.gui.swing.view.repository.MindMapView;
-import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
+import dsw.gerumap.app.gui.swing.view.repository.models.FolderView;
+import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
+import dsw.gerumap.app.gui.swing.view.repository.models.ProjectView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.ModelView;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.NotificationType;
-import dsw.gerumap.app.repository.composite.CompositeModelNode;
-import dsw.gerumap.app.repository.composite.ModelNode;
-import dsw.gerumap.app.repository.models.Folder;
-import dsw.gerumap.app.repository.models.MindMap;
-import dsw.gerumap.app.repository.models.Project;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

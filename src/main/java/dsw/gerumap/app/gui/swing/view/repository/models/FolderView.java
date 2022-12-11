@@ -1,4 +1,4 @@
-package dsw.gerumap.app.gui.swing.view.repository;
+package dsw.gerumap.app.gui.swing.view.repository.models;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.gui.swing.view.custom.CreateModelButton;

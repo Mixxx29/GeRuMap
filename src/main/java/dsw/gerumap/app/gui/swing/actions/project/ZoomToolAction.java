@@ -2,7 +2,7 @@ package dsw.gerumap.app.gui.swing.actions.project;
 
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
-import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
+import dsw.gerumap.app.gui.swing.view.repository.models.ProjectView;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.models.MindMap;

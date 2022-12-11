@@ -1,4 +1,4 @@
-package dsw.gerumap.app.gui.swing.view.repository;
+package dsw.gerumap.app.gui.swing.view.repository.models;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.gui.swing.view.ProjectToolbar;
@@ -7,7 +7,6 @@ import dsw.gerumap.app.gui.swing.view.cursor.CustomCursor;
 import dsw.gerumap.app.gui.swing.view.custom.CreateModelButton;
 import dsw.gerumap.app.gui.swing.view.custom.CustomContextMenu;
 import dsw.gerumap.app.gui.swing.view.custom.CustomScrollPane;
-import dsw.gerumap.app.gui.swing.view.custom.ToolbarButton;
 import dsw.gerumap.app.gui.swing.view.repository.composite.CompositeModelView;
 import dsw.gerumap.app.gui.swing.view.repository.composite.ModelView;
 import dsw.gerumap.app.gui.swing.view.repository.preview.ModelPreview;
@@ -16,13 +15,13 @@ import dsw.gerumap.app.repository.composite.CompositeModelNode;
 import dsw.gerumap.app.repository.factory.ModelType;
 import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.repository.models.Project;
-import dsw.gerumap.app.resources.ResourceLoader;
-import dsw.gerumap.app.resources.ResourceType;
 import dsw.gerumap.app.state.StateManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -35,8 +34,6 @@ public class ProjectView extends CompositeModelView {
     private final CreateModelButton createMindMapButton;
 
     private final StateManager stateManager;
-    private ToolbarButton selectedStateButton;
-
     private ProjectToolbar toolbar;
 
     public ProjectView(Project project) {
@@ -52,7 +49,52 @@ public class ProjectView extends CompositeModelView {
                 g.fillRect(getWidth() - 3, 0, getWidth() - 1, getHeight());
             }
         };
-        content.setBorder(new EmptyBorder(0, 0, 0 ,1));
+        content.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                stateManager.getCurrent().mouseEntered((MindMapView) getDisplayed(), e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                stateManager.getCurrent().mouseExited((MindMapView) getDisplayed(), e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                stateManager.getCurrent().mousePressed((MindMapView) getDisplayed(), e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                stateManager.getCurrent().mouseReleased((MindMapView) getDisplayed(), e);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                stateManager.getCurrent().mouseClicked((MindMapView) getDisplayed(), e);
+            }
+        });
+        content.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                stateManager.getCurrent().mouseDragged((MindMapView) getDisplayed(), e);
+            }
+        });
+        content.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                stateManager.getCurrent().keyPressed((MindMapView) getDisplayed(), e);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                stateManager.getCurrent().keyReleased((MindMapView) getDisplayed(), e);
+            }
+        });
+        content.setBorder(new EmptyBorder(0, 0, 0 ,3));
+        content.setFocusable(true);
         add(content, BorderLayout.CENTER);
 
         previews = new JPanel(new GridBagLayout());
@@ -185,6 +227,7 @@ public class ProjectView extends CompositeModelView {
     public void display() {
         super.display();
         MainFrame.getInstance().getEditorWindow().setActiveProjectView(this);
+        content.requestFocus();
     }
 
     @Override
@@ -214,48 +257,44 @@ public class ProjectView extends CompositeModelView {
         titleLabel.updateUI();
     }
 
-    public void selectStateButton(ToolbarButton button) {
-        if (button == null) return;
-        if (selectedStateButton != null) {
-            selectedStateButton.select(false);
-        }
-        selectedStateButton = button;
-        selectedStateButton.select(true);
-    }
-
     public void setSelectionToolState() {
         stateManager.setSelectionToolState();
-        selectStateButton(toolbar.getSelectionToolButton());
+        toolbar.selectSelectionToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.SELECTION_CURSOR));
+        if (getDisplayed() != null) ((MindMapView)getDisplayed()).deselectAllElements();
     }
 
     public void setMoveToolState() {
         stateManager.setMoveToolState();
-        selectStateButton(toolbar.getMoveToolButton());
+        toolbar.selectMoveToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.MOVE_CURSOR));
     }
 
     public void setZoomToolState() {
         stateManager.setZoomToolState();
-        selectStateButton(toolbar.getZoomToolButton());
+        toolbar.selectZoomToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.ZOOM_CURSOR));
+        ((MindMapView)getDisplayed()).deselectAllElements();
     }
 
     public void setEraseToolState() {
         stateManager.setEraserToolState();
-        selectStateButton(toolbar.getEraserToolButton());
+        toolbar.selectEraserToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.ERASER_CURSOR));
+        ((MindMapView)getDisplayed()).deselectAllElements();
     }
 
     public void setTermToolState() {
         stateManager.setTermToolState();
-        selectStateButton(toolbar.getTermToolButton());
+        toolbar.selectTermToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.TERM_CURSOR));
+        ((MindMapView)getDisplayed()).deselectAllElements();
     }
 
     public void setLinkToolState() {
         stateManager.setLinkToolState();
-        selectStateButton(toolbar.getLinkToolButton());
+        toolbar.selectLinkToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.LINK_CURSOR));
+        ((MindMapView)getDisplayed()).deselectAllElements();
     }
 }

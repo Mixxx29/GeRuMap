@@ -2,10 +2,8 @@ package dsw.gerumap.app.gui.swing.view.repository.preview;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.gui.swing.view.custom.CustomContextMenu;
-import dsw.gerumap.app.gui.swing.view.repository.MindMapView;
+import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
 import dsw.gerumap.app.observer.NotificationType;
-import dsw.gerumap.app.repository.composite.ModelNode;
-import dsw.gerumap.app.repository.models.MindMap;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

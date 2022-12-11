@@ -1,9 +1,9 @@
 package dsw.gerumap.app.gui.swing.view.repository.composite;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
-import dsw.gerumap.app.gui.swing.view.repository.FolderView;
-import dsw.gerumap.app.gui.swing.view.repository.MindMapView;
-import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
+import dsw.gerumap.app.gui.swing.view.repository.models.FolderView;
+import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
+import dsw.gerumap.app.gui.swing.view.repository.models.ProjectView;
 import dsw.gerumap.app.gui.swing.view.repository.preview.ModelPreview;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.NotificationType;

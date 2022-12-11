@@ -1,6 +1,8 @@
 package dsw.gerumap.app.gui.swing.view;
 
 import dsw.gerumap.app.gui.swing.actions.ActionManager;
+import dsw.gerumap.app.gui.swing.view.custom.LinkSettings;
+import dsw.gerumap.app.gui.swing.view.custom.TermSettings;
 import dsw.gerumap.app.gui.swing.view.custom.ToolbarButton;
 import dsw.gerumap.app.gui.swing.view.custom.ToolbarSeparator;
 
@@ -10,6 +12,8 @@ import java.awt.*;
 
 public class ProjectToolbar extends JToolBar {
 
+    private ToolbarButton selected;
+
     private ToolbarButton selectionToolButton;
     private ToolbarButton moveToolButton;
     private ToolbarButton zoomToolButton;
@@ -17,10 +21,13 @@ public class ProjectToolbar extends JToolBar {
     private ToolbarButton termToolButton;
     private ToolbarButton linkToolButton;
 
+    private TermSettings termSettings;
+    private LinkSettings linkSettings;
+
     public ProjectToolbar() {
         super(VERTICAL);
         setFloatable(false);
-        setBorder(new EmptyBorder(8, 5, 0, 8));
+        setBorder(new EmptyBorder(8, 5, 0, 11));
         setBackground(new Color(80, 80, 80));
 
         ActionManager actionManager = MainFrame.getInstance().getActionManager();
@@ -49,6 +56,14 @@ public class ProjectToolbar extends JToolBar {
         add(linkToolButton);
 
         addLineSeparator();
+
+        termSettings = new TermSettings();
+        add(termSettings);
+
+        addLineSeparator();
+
+        linkSettings = new LinkSettings();
+        add(linkSettings);
     }
 
     @Override
@@ -68,35 +83,44 @@ public class ProjectToolbar extends JToolBar {
             public void paint(Graphics g) {
                 super.paint(g);
                 g.setColor(new Color(120, 120, 120));
-                g.drawLine(0, getHeight() / 2, getWidth() - 1, getHeight() / 2);
+                g.drawLine(2, getHeight() / 2, getWidth() - 1, getHeight() / 2);
             }
         };
         separator.setBorder(new EmptyBorder(0, -10, 0, 0));
-        separator.setMaximumSize(new Dimension(90, 15));
+        separator.setMaximumSize(new Dimension(90, 17));
         add(separator);
     }
 
-    public ToolbarButton getSelectionToolButton() {
-        return selectionToolButton;
+    private void selectButton(ToolbarButton button) {
+        if (button == null) return;
+        if (selected != null) {
+            selected.select(false);
+        }
+        selected = button;
+        selected.select(true);
     }
 
-    public ToolbarButton getMoveToolButton() {
-        return moveToolButton;
+    public void selectSelectionToolButton() {
+        selectButton(selectionToolButton);
     }
 
-    public ToolbarButton getZoomToolButton() {
-        return zoomToolButton;
+    public void selectMoveToolButton() {
+        selectButton(moveToolButton);
     }
 
-    public ToolbarButton getEraserToolButton() {
-        return eraserToolButton;
+    public void selectZoomToolButton() {
+        selectButton(zoomToolButton);
     }
 
-    public ToolbarButton getTermToolButton() {
-        return termToolButton;
+    public void selectEraserToolButton() {
+        selectButton(eraserToolButton);
     }
 
-    public ToolbarButton getLinkToolButton() {
-        return linkToolButton;
+    public void selectTermToolButton() {
+        selectButton(termToolButton);
+    }
+
+    public void selectLinkToolButton() {
+        selectButton(linkToolButton);
     }
 }

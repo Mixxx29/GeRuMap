@@ -1,11 +1,9 @@
 package dsw.gerumap.app.gui.swing.view.windows;
 
 import dsw.gerumap.app.core.App;
-import dsw.gerumap.app.gui.swing.tree.model.TreeItem;
 import dsw.gerumap.app.gui.swing.view.custom.PathItem;
-import dsw.gerumap.app.gui.swing.view.repository.ProjectView;
-import dsw.gerumap.app.gui.swing.view.repository.WorkspaceView;
-import dsw.gerumap.app.gui.swing.view.repository.preview.ModelPreview;
+import dsw.gerumap.app.gui.swing.view.repository.models.ProjectView;
+import dsw.gerumap.app.gui.swing.view.repository.models.WorkspaceView;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.composite.ModelNode;
 import dsw.gerumap.app.repository.models.MindMap;

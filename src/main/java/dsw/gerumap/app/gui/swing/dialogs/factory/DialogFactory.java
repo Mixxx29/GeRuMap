@@ -33,6 +33,12 @@ public class DialogFactory {
             case ERROR -> {
                 return new ErrorDialog();
             }
+
+            case COLOR_CHOOSER -> {
+                if (object instanceof String) {
+                    return new ColorChooserDialog((String) object);
+                }
+            }
         }
 
         System.out.println("Creating dialog failed!");
