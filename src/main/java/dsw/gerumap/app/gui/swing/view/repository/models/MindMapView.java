@@ -6,6 +6,7 @@ import dsw.gerumap.app.gui.swing.view.repository.elements.LinkPainter;
 import dsw.gerumap.app.gui.swing.view.repository.elements.TermPainter;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.elements.LinkElement;
+import dsw.gerumap.app.repository.elements.MindMapElement;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
 
@@ -13,8 +14,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,10 +32,16 @@ public class MindMapView extends ModelView {
     private Graphics2D bottomBufferGraphics;
     private Graphics2D topBufferGraphics;
 
+    public Point2D.Float offset;
+    public float scale;
+
     public MindMapView(MindMap mindMap) {
         super(mindMap);
         painters = new ArrayList<>();
         selected = new ArrayList<>();
+
+        offset = new Point2D.Float(0.0f, 0.0f);
+        scale = 1.0f;
 
         setLayout(new BorderLayout());
 
@@ -57,7 +66,9 @@ public class MindMapView extends ModelView {
     }
 
     public Iterator<ElementPainter> getPaintersIterator() {
-        return painters.iterator();
+        List<ElementPainter> reverseList = new ArrayList<>(painters);
+        Collections.reverse(reverseList);
+        return reverseList.iterator();
     }
 
     public void selectElements(List<ElementPainter> toSelect) {
@@ -99,7 +110,7 @@ public class MindMapView extends ModelView {
 
         // Draw elements
         for (ElementPainter painter : painters) {
-            painter.paint((Graphics2D)g);
+            painter.paint((Graphics2D)g, offset, scale);
         }
 
         // Draw top buffer
@@ -155,6 +166,78 @@ public class MindMapView extends ModelView {
                     selectElements(List.of(linkPainter));
                 }
                 repaint();
+            }
+
+            case REMOVE_ELEMENT -> {
+                if (object instanceof MindMapElement element) {
+                    for (ElementPainter painter : painters) {
+                        if (painter.getElement() == element) {
+                            painters.remove(painter);
+                            break;
+                        }
+                    }
+                    repaint();
+                }
+            }
+
+            case TERM_FILL_COLOR -> {
+                if (object instanceof Color color) {
+                    for (ElementPainter painter : selected) {
+                        if (painter instanceof TermPainter termPainter) {
+                            TermElement termElement = (TermElement) termPainter.getElement();
+                            termElement.setFillColor(color);
+                        }
+                    }
+                    repaint();
+                }
+            }
+
+            case TERM_STROKE_COLOR -> {
+                if (object instanceof Color color) {
+                    for (ElementPainter painter : selected) {
+                        if (painter instanceof TermPainter termPainter) {
+                            TermElement termElement = (TermElement) termPainter.getElement();
+                            termElement.setStrokeColor(color);
+                        }
+                    }
+                    repaint();
+                }
+            }
+
+            case TERM_STROKE_SIZE -> {
+                if (object instanceof Integer strokeSize) {
+                    for (ElementPainter painter : selected) {
+                        if (painter instanceof TermPainter termPainter) {
+                            TermElement termElement = (TermElement) termPainter.getElement();
+                            termElement.setStroke(new BasicStroke(strokeSize));
+                        }
+                    }
+                    repaint();
+                }
+            }
+
+            case LINK_STROKE_COLOR -> {
+                if (object instanceof Color color) {
+                    for (ElementPainter painter : selected) {
+                        if (painter instanceof LinkPainter linkPainter) {
+                            LinkElement linkElement = (LinkElement) linkPainter.getElement();
+                            linkElement.setStrokeColor(color);
+                        }
+                    }
+                    repaint();
+                }
+            }
+
+            case LINK_STROKE_SIZE -> {
+                if (object instanceof Integer strokeSize) {
+                    for (ElementPainter painter : selected) {
+                        if (painter instanceof LinkPainter linkPainter) {
+                            LinkElement linkElement = (LinkElement) linkPainter.getElement();
+                            linkElement.setStroke(new BasicStroke(strokeSize));
+                        }
+                    }
+                    repaint();
+                }
             }
         }
         super.update(notificationType, object);

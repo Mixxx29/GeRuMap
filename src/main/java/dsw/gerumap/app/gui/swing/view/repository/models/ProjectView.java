@@ -1,6 +1,7 @@
 package dsw.gerumap.app.gui.swing.view.repository.models;
 
 import dsw.gerumap.app.gui.swing.view.MainFrame;
+import dsw.gerumap.app.gui.swing.view.ProjectBottomToolbar;
 import dsw.gerumap.app.gui.swing.view.ProjectToolbar;
 import dsw.gerumap.app.gui.swing.view.cursor.CursorType;
 import dsw.gerumap.app.gui.swing.view.cursor.CustomCursor;
@@ -16,14 +17,13 @@ import dsw.gerumap.app.repository.factory.ModelType;
 import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.state.StateManager;
+import dsw.gerumap.app.util.GraphicsUtilities;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.awt.geom.Point2D;
 
 public class ProjectView extends CompositeModelView {
 
@@ -35,6 +35,7 @@ public class ProjectView extends CompositeModelView {
 
     private final StateManager stateManager;
     private ProjectToolbar toolbar;
+    private ProjectBottomToolbar bottomToolbar;
 
     public ProjectView(Project project) {
         super(project);
@@ -93,6 +94,38 @@ public class ProjectView extends CompositeModelView {
                 stateManager.getCurrent().keyReleased((MindMapView) getDisplayed(), e);
             }
         });
+        content.addMouseWheelListener(new MouseAdapter() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if (e.isControlDown()) {
+                    Point2D.Float beforeZoom = GraphicsUtilities.screenToWorldPoint(
+                            e.getPoint(), ((MindMapView) getDisplayed()).offset, ((MindMapView) getDisplayed()).scale
+                    );
+                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).scale *= 1.1f;
+                    else ((MindMapView) getDisplayed()).scale *= 0.9f;
+
+                    Point2D.Float afterZoom = GraphicsUtilities.screenToWorldPoint(
+                            e.getPoint(), ((MindMapView) getDisplayed()).offset, ((MindMapView) getDisplayed()).scale
+                    );
+
+                    Point2D.Float difference = new Point2D.Float(
+                            afterZoom.x - beforeZoom.x,
+                            afterZoom.y - beforeZoom.y
+                    );
+
+                    ((MindMapView) getDisplayed()).offset.x -= difference.x;
+                    ((MindMapView) getDisplayed()).offset.y -= difference.y;
+                } else if (e.isShiftDown()){
+                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).offset.x -= 50.0f / ((MindMapView) getDisplayed()).scale;
+                    else ((MindMapView) getDisplayed()).offset.x += 50.0f / ((MindMapView) getDisplayed()).scale;
+                } else {
+                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).offset.y -= 50.0f / ((MindMapView) getDisplayed()).scale;
+                    else ((MindMapView) getDisplayed()).offset.y += 50.0f / ((MindMapView) getDisplayed()).scale;
+                }
+
+                content.repaint();
+            }
+        });
         content.setBorder(new EmptyBorder(0, 0, 0 ,3));
         content.setFocusable(true);
         add(content, BorderLayout.CENTER);
@@ -128,9 +161,13 @@ public class ProjectView extends CompositeModelView {
         titlePanel.add(titleLabel);
         add(titlePanel, BorderLayout.NORTH);
 
-        // Add Toolbar
+        // Add toolbar
         toolbar = new ProjectToolbar();
         add(toolbar, BorderLayout.WEST);
+
+        // Add bottom toolbar
+        bottomToolbar = new ProjectBottomToolbar();
+        add(bottomToolbar, BorderLayout.SOUTH);
 
         previewsScroll.addMouseListener(new MouseAdapter() {
             @Override

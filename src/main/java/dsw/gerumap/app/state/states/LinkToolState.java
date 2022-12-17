@@ -10,9 +10,12 @@ import dsw.gerumap.app.repository.elements.LinkElement;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.state.AbstractState;
+import dsw.gerumap.app.util.GraphicsUtilities;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,6 +36,11 @@ public class LinkToolState extends AbstractState {
 
     @Override
     public void mousePressed(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mousePressed(mindMapView, e);
+            return;
+        }
+
         Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
         while (iterator.hasNext()) {
             ElementPainter painter = iterator.next();
@@ -47,6 +55,11 @@ public class LinkToolState extends AbstractState {
 
     @Override
     public void mouseReleased(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseReleased(mindMapView, e);
+            return;
+        }
+
         if (currentLinkElement == null) return;
 
         Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
@@ -71,17 +84,28 @@ public class LinkToolState extends AbstractState {
 
     @Override
     public void mouseDragged(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseDragged(mindMapView, e);
+            return;
+        }
+
         if (currentLinkElement == null) return;
 
         // Clear bottom buffer
         mindMapView.clearBottomBuffer();
+
         cursorElement.setPosition(
-            new Point(
-               e.getX() - cursorElement.getSize().width / 2,
-               e.getY() - cursorElement.getSize().height / 2
-            )
+                GraphicsUtilities.screenToWorldPoint(
+                        new Point(
+                                (int) (e.getX() - cursorElement.getSize().width / 2.0f * mindMapView.scale),
+                                (int) (e.getY() - cursorElement.getSize().height / 2.0f * mindMapView.scale)
+                        ),
+                        mindMapView.offset,
+                        mindMapView.scale
+                )
+
         );
-        currentLinkPainter.paint(g2);
+        currentLinkPainter.paint(g2, mindMapView.offset, mindMapView.scale);
 
         mindMapView.repaint();
     }

@@ -9,9 +9,12 @@ import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.state.AbstractState;
+import dsw.gerumap.app.util.GraphicsUtilities;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 
 public class TermToolState extends AbstractState {
 
@@ -27,11 +30,18 @@ public class TermToolState extends AbstractState {
 
     @Override
     public void mousePressed(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mousePressed(mindMapView, e);
+            return;
+        }
+
         startPoint = e.getPoint(); // Get start point
 
         // Create new element
         currentTermElement = new TermElement();
-        currentTermElement.setPosition(startPoint); // Set element position
+        currentTermElement.setPosition( // Set element position
+                GraphicsUtilities.screenToWorldPoint(e.getPoint(), mindMapView.offset, mindMapView.scale)
+        );
 
         // Create element painter
         currentTermPainter.setElement(currentTermElement);
@@ -41,6 +51,11 @@ public class TermToolState extends AbstractState {
 
     @Override
     public void mouseReleased(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseReleased(mindMapView, e);
+            return;
+        }
+
         // Add new element
         ((MindMap)mindMapView.getModel()).addElement(currentTermElement);
         mindMapView.clearTopBuffer(); // Clear top buffer
@@ -57,6 +72,11 @@ public class TermToolState extends AbstractState {
 
     @Override
     public void mouseDragged(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseDragged(mindMapView, e);
+            return;
+        }
+
         if (startPoint == null || currentTermElement == null) return;
 
         Rectangle rectangle = new Rectangle();
@@ -76,12 +96,24 @@ public class TermToolState extends AbstractState {
         }
 
         mindMapView.clearTopBuffer(); // Clear top buffer
-        currentTermElement.setPosition(rectangle.getLocation()); // Update position
-        currentTermElement.setSize(rectangle.getSize()); // Update size
+
+        // Update position
+        currentTermElement.setPosition(
+                GraphicsUtilities.screenToWorldPoint(rectangle.getLocation(), mindMapView.offset, mindMapView.scale)
+        );
+
+        // Update size
+        currentTermElement.setSize(
+                new Dimension(
+                        (int)(rectangle.getSize().width / mindMapView.scale),
+                        (int)(rectangle.getSize().height / mindMapView.scale)
+                )
+        );
+
         currentTermElement.notifyListeners(NotificationType.UPDATE_ELEMENT, null);
 
         // Paint element
-        currentTermPainter.paint(g2);
+        currentTermPainter.paint(g2, mindMapView.offset, mindMapView.scale);
 
         // Repaint
         mindMapView.repaint();

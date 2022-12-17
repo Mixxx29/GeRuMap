@@ -14,20 +14,17 @@ public class ProjectToolbar extends JToolBar {
 
     private ToolbarButton selected;
 
-    private ToolbarButton selectionToolButton;
-    private ToolbarButton moveToolButton;
-    private ToolbarButton zoomToolButton;
-    private ToolbarButton eraserToolButton;
-    private ToolbarButton termToolButton;
-    private ToolbarButton linkToolButton;
-
-    private TermSettings termSettings;
-    private LinkSettings linkSettings;
+    private final ToolbarButton selectionToolButton;
+    private final ToolbarButton moveToolButton;
+    private final ToolbarButton zoomToolButton;
+    private final ToolbarButton eraserToolButton;
+    private final ToolbarButton termToolButton;
+    private final ToolbarButton linkToolButton;
 
     public ProjectToolbar() {
         super(VERTICAL);
         setFloatable(false);
-        setBorder(new EmptyBorder(8, 5, 0, 11));
+        setBorder(new EmptyBorder(7, 5, 0, 8));
         setBackground(new Color(80, 80, 80));
 
         ActionManager actionManager = MainFrame.getInstance().getActionManager();
@@ -56,14 +53,6 @@ public class ProjectToolbar extends JToolBar {
         add(linkToolButton);
 
         addLineSeparator();
-
-        termSettings = new TermSettings();
-        add(termSettings);
-
-        addLineSeparator();
-
-        linkSettings = new LinkSettings();
-        add(linkSettings);
     }
 
     @Override
@@ -87,7 +76,7 @@ public class ProjectToolbar extends JToolBar {
             }
         };
         separator.setBorder(new EmptyBorder(0, -10, 0, 0));
-        separator.setMaximumSize(new Dimension(90, 17));
+        separator.setMaximumSize(new Dimension(90, 13));
         add(separator);
     }
 

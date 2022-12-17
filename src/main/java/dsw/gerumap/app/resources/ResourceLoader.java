@@ -88,6 +88,11 @@ public class ResourceLoader {
                 path = "zoom_cursor.png";
             }
 
+            case "DRAG_CURSOR" -> {
+                offset = new Point(16, 16);
+                path = "drag_cursor.png";
+            }
+
             default -> {
                 return null;
             }

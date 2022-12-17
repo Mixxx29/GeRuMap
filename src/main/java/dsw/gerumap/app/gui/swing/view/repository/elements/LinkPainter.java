@@ -4,9 +4,11 @@ import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.elements.LinkElement;
 import dsw.gerumap.app.repository.elements.MindMapElement;
 import dsw.gerumap.app.repository.elements.TermElement;
+import dsw.gerumap.app.util.GraphicsUtilities;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 public class LinkPainter extends ElementPainter {
 
@@ -18,7 +20,7 @@ public class LinkPainter extends ElementPainter {
     }
 
     @Override
-    public void paint(Graphics2D g2) {
+    public void paint(Graphics2D g2, Point2D.Float offset, float scale) {
         // Cache terms
         TermElement termElement1 = ((LinkElement)element).getTermElement1();
         TermElement termElement2 = ((LinkElement)element).getTermElement2();
@@ -28,28 +30,29 @@ public class LinkPainter extends ElementPainter {
 
         // Set stroke
         if (selected) {
-            g2.setStroke(new BasicStroke(((BasicStroke)element.getStroke()).getLineWidth() + 2.0f));
+            g2.setStroke(new BasicStroke(((BasicStroke)element.getStroke()).getLineWidth() * scale + 2.0f));
         } else {
-            g2.setStroke(element.getStroke());
+            g2.setStroke(new BasicStroke(((BasicStroke)element.getStroke()).getLineWidth() * scale));
         }
 
+        // Translate shape to screen position
+        Point screenPosition1 = GraphicsUtilities.worldToScreenPoint(termElement1.getPosition(), offset, scale);
+        Point screenPosition2 = GraphicsUtilities.worldToScreenPoint(termElement2.getPosition(), offset, scale);
+
         Point start = new Point(
-            termElement1.getPosition().x + termElement1.getSize().width / 2,
-            termElement1.getPosition().y  + termElement1.getSize().height / 2
+                (int)(screenPosition1.x + termElement1.getSize().width * scale / 2),
+                (int)(screenPosition1.y  + termElement1.getSize().height * scale / 2)
         );
 
         Point end = new Point(
-            termElement2.getPosition().x + termElement2.getSize().width / 2,
-            termElement2.getPosition().y + termElement2.getSize().height / 2
+                (int)(screenPosition2.x + termElement2.getSize().width * scale / 2),
+                (int)(screenPosition2.y + termElement2.getSize().height * scale / 2)
         );
 
+        shape = new Line2D.Float(start, end);
+
         // Draw line
-        g2.drawLine(
-                start.x,
-                start.y,
-                end.x,
-                end.y
-        );
+        g2.draw(shape);
 
         /*if (selected) {
             g2.setColor(handleColor);
@@ -76,12 +79,19 @@ public class LinkPainter extends ElementPainter {
 
     @Override
     public boolean at(Point point) {
-        return false;
+        return shape.intersects(
+                new Rectangle(
+                        point.x - 5,
+                        point.y - 5,
+                        5,
+                        5
+                )
+        );
     }
 
     @Override
     public boolean intersects(Rectangle rectangle) {
-        return false;
+        return shape.intersects(rectangle);
     }
 
     @Override

@@ -4,6 +4,7 @@ import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.repository.elements.MindMapElement;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 
 public abstract class ElementPainter implements IListener {
 
@@ -69,7 +70,7 @@ public abstract class ElementPainter implements IListener {
         this.selected = selected;
     }
 
-    public abstract void paint(Graphics2D g2);
+    public abstract void paint(Graphics2D g2, Point2D.Float offset, float scale);
 
     public abstract boolean at(Point point);
     public abstract boolean intersects(Rectangle rectangle);

@@ -13,9 +13,9 @@ import java.awt.event.MouseEvent;
 
 public class ColorChooserDialog extends AbstractDialog {
 
-    private JPanel colorPanel;
-    private JPanel selectedColorPanel;
-    private JPanel hueBar;
+    private final JPanel colorPanel;
+    private final JPanel selectedColorPanel;
+    private final JPanel hueBar;
 
     private int hue;
     private float saturation;

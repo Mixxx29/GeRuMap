@@ -7,6 +7,7 @@ import dsw.gerumap.app.gui.swing.view.repository.elements.ElementPainter;
 import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
 import dsw.gerumap.app.state.AbstractState;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,11 +40,21 @@ public class SelectionToolState extends AbstractState {
     }
 
     public void mousePressed(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mousePressed(mindMapView, e);
+            return;
+        }
+
         startPoint = e.getPoint();
         g2 = mindMapView.getTopBufferGraphics();
     }
 
     public void mouseReleased(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseReleased(mindMapView, e);
+            return;
+        }
+
         // Reset references
         startPoint = null;
         g2 = null;
@@ -71,6 +82,7 @@ public class SelectionToolState extends AbstractState {
                 } else {
                     mindMapView.selectElements(List.of(painter));
                 }
+                break;
             }
         }
 
@@ -81,6 +93,11 @@ public class SelectionToolState extends AbstractState {
     }
 
     public void mouseDragged(MindMapView mindMapView, MouseEvent e) {
+        if (SwingUtilities.isMiddleMouseButton(e)) {
+            super.mouseDragged(mindMapView, e);
+            return;
+        }
+
         if (startPoint == null || g2 == null) return;
 
         Rectangle selectionRect = new Rectangle();

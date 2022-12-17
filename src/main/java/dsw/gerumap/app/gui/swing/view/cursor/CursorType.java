@@ -6,5 +6,6 @@ public enum CursorType {
     ERASER_CURSOR,
     TERM_CURSOR,
     LINK_CURSOR,
-    ZOOM_CURSOR
+    ZOOM_CURSOR,
+    DRAG_CURSOR
 }

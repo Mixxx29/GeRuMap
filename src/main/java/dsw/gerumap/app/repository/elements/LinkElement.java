@@ -1,5 +1,7 @@
 package dsw.gerumap.app.repository.elements;
 
+import dsw.gerumap.app.observer.NotificationType;
+
 import java.awt.*;
 
 public class LinkElement extends MindMapElement {
@@ -27,5 +29,10 @@ public class LinkElement extends MindMapElement {
 
     public void setTermElement2(TermElement termElement2) {
         this.termElement2 = termElement2;
+    }
+
+    @Override
+    public void update(NotificationType notificationType, Object object) {
+
     }
 }

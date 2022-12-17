@@ -3,15 +3,18 @@ package dsw.gerumap.app.repository.elements;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.models.MindMap;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MindMapElement implements IPublisher {
+public abstract class MindMapElement implements IPublisher, IListener {
 
     protected Stroke stroke;
     protected Color strokeColor;
+
+    protected MindMap parent;
     protected List<IListener> listeners;
 
     public MindMapElement() {
@@ -42,6 +45,10 @@ public abstract class MindMapElement implements IPublisher {
 
     public void setStroke(Stroke stroke) {
         this.stroke = stroke;
+    }
+
+    public void setParent(MindMap parent) {
+        this.parent = parent;
     }
 
     @Override

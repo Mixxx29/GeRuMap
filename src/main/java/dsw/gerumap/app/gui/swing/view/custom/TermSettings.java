@@ -2,6 +2,8 @@ package dsw.gerumap.app.gui.swing.view.custom;
 
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
+import dsw.gerumap.app.gui.swing.view.MainFrame;
+import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
@@ -29,31 +31,25 @@ public class TermSettings extends JPanel {
 
         GridBagConstraints constraints = new GridBagConstraints();
 
-        setMaximumSize(new Dimension(90, 274));
-        setBorder(new EmptyBorder(0, -20, 0, -20));
+        setMaximumSize(new Dimension(350, 200));
 
         JLabel label = new JLabel("Term", SwingConstants.CENTER);
         constraints.gridx = 0;
         constraints.gridy = 0;
+        constraints.insets = new Insets(0, 10, -5, 10);
         add(label, constraints);
 
         label = new JLabel("Settings", SwingConstants.CENTER);
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.insets = new Insets(0, 0, 10, 0);
+        constraints.insets = new Insets(-5, 10, 0, 10);
         add(label, constraints);
 
-        label = new JLabel("Fill", SwingConstants.CENTER);
+        label = new JLabel("Fill Color", SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.insets = new Insets(0, 0, 0, 0);
-        add(label, constraints);
-
-        label = new JLabel("Color", SwingConstants.CENTER);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 3;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
 
         JPanel fillColorPanel = new JPanel();
@@ -66,30 +62,25 @@ public class TermSettings extends JPanel {
         fillColorPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                fillColorPanel.setBackground(
-                        (Color) DialogFactory.createDialog(
-                                DialogType.COLOR_CHOOSER,
-                                "Choose term fill color"
-                        ).start(fillColorPanel.getBackground())
-                );
+                Color c = (Color) DialogFactory.createDialog(
+                        DialogType.COLOR_CHOOSER,
+                        "Choose term fill color"
+                ).start(fillColorPanel.getBackground());
+                fillColorPanel.setBackground(c);
+                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
+                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_FILL_COLOR, c);
             }
         });
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.insets = new Insets(5, 0, 12, 0);
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(0, 10, 3, 10);
         add(fillColorPanel, constraints);
 
-        label = new JLabel("Stroke", SwingConstants.CENTER);
+        label = new JLabel("Stroke Color", SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 5;
-        constraints.insets = new Insets(0, 0, 0, 0);
-        add(label, constraints);
-
-        label = new JLabel("Color", SwingConstants.CENTER);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 6;
+        constraints.gridx = 2;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
 
         JPanel strokeColorPanel = new JPanel();
@@ -102,67 +93,27 @@ public class TermSettings extends JPanel {
         strokeColorPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                strokeColorPanel.setBackground(
-                        (Color) DialogFactory.createDialog(
-                                DialogType.COLOR_CHOOSER,
-                                "Choose term stroke color"
-                        ).start(strokeColorPanel.getBackground())
-                );
+                Color c = (Color) DialogFactory.createDialog(
+                        DialogType.COLOR_CHOOSER,
+                        "Choose term stroke color"
+                ).start(strokeColorPanel.getBackground());
+                strokeColorPanel.setBackground(c);
+                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
+                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_COLOR, c);
             }
         });
-        constraints.gridx = 0;
-        constraints.gridy = 7;
-        constraints.insets = new Insets(5, 0, 12, 0);
+        constraints.gridx = 2;
+        constraints.gridy = 1;
+        constraints.insets = new Insets(0, 10, 3, 10);
         add(strokeColorPanel, constraints);
 
-        label = new JLabel("Stroke", SwingConstants.CENTER);
+        label = new JLabel("Stroke Size", SwingConstants.CENTER);
         label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 8;
-        constraints.insets = new Insets(0, 0, 0, 0);
+        constraints.gridx = 3;
+        constraints.gridy = 0;
+        constraints.gridwidth = 3;
+        constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
-
-        label = new JLabel("Size", SwingConstants.CENTER);
-        label.setFont(label.getFont().deriveFont(Font.PLAIN));
-        constraints.gridx = 0;
-        constraints.gridy = 9;
-        add(label, constraints);
-
-        label = new JLabel(ResourceLoader.<ImageIcon>load("increase_arrow.png", ResourceType.ICON));
-        label.setBackground(new Color(120, 120, 120));
-        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (strokeSize < 99) strokeSize++;
-                strokeLabel.setText(String.valueOf(strokeSize));
-                strokeLabel.updateUI();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                ((JLabel)e.getComponent()).setOpaque(true);
-                updateUI();
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                ((JLabel)e.getComponent()).setOpaque(false);
-                updateUI();
-            }
-        });
-        constraints.gridx = 0;
-        constraints.gridy = 10;
-        constraints.insets = new Insets(5, 0, 0, 0);
-        add(label, constraints);
-
-
-        strokeLabel = new JLabel(String.valueOf(strokeSize), SwingConstants.CENTER);
-        strokeLabel.setFont(label.getFont().deriveFont(14.0f));
-        constraints.gridx = 0;
-        constraints.gridy = 11;
-        constraints.insets = new Insets(0, 0, 0, 0);
-        add(strokeLabel, constraints);
 
         label = new JLabel(ResourceLoader.<ImageIcon>load("decrease_arrow.png", ResourceType.ICON));
         label.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -173,6 +124,8 @@ public class TermSettings extends JPanel {
                 if (strokeSize > 1) strokeSize--;
                 strokeLabel.setText(String.valueOf(strokeSize));
                 strokeLabel.updateUI();
+                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
+                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_SIZE, strokeSize);
             }
 
             @Override
@@ -187,8 +140,57 @@ public class TermSettings extends JPanel {
                 updateUI();
             }
         });
-        constraints.gridx = 0;
-        constraints.gridy = 12;
+        constraints.gridx = 3;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.insets = new Insets(0, 5, 0, 0);
+        add(label, constraints);
+
+        strokeLabel = new JLabel(String.valueOf(strokeSize), SwingConstants.CENTER);
+        strokeLabel.setFont(label.getFont().deriveFont(14.0f));
+        strokeLabel.setPreferredSize(
+                new Dimension(
+                        strokeLabel.getFontMetrics(strokeLabel.getFont()).stringWidth("99"),
+                        strokeLabel.getFont().getSize()
+                )
+        );
+        constraints.gridx = 4;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.insets = new Insets(0, 5, 0, 5);
+        add(strokeLabel, constraints);
+
+        label = new JLabel(ResourceLoader.<ImageIcon>load("increase_arrow.png", ResourceType.ICON));
+        label.setBackground(new Color(120, 120, 120));
+        label.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        label.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (strokeSize < 99) strokeSize++;
+                strokeLabel.setText(String.valueOf(strokeSize));
+                strokeLabel.updateUI();
+                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
+                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_SIZE, strokeSize);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                ((JLabel)e.getComponent()).setOpaque(true);
+                updateUI();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                ((JLabel)e.getComponent()).setOpaque(false);
+                updateUI();
+            }
+        });
+        constraints.gridx = 5;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(0, 0, 0, 5);
         add(label, constraints);
     }
 }

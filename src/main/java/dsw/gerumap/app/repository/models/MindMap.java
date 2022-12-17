@@ -24,4 +24,22 @@ public class MindMap extends ModelNode {
         else elements.add(element);
         notifyListeners(NotificationType.ADD_ELEMENT, element);
     }
+
+    public void removeElement(MindMapElement element) {
+        elements.remove(element);
+        notifyListeners(NotificationType.REMOVE_ELEMENT, element);
+
+        if (element instanceof TermElement termElement) {
+            for (MindMapElement mindMapElement : new ArrayList<>(elements)) {
+                if (mindMapElement instanceof LinkElement linkElement) {
+                    if (linkElement.getTermElement1() == termElement || linkElement.getTermElement2() == termElement) {
+                        elements.remove(linkElement);
+                        notifyListeners(NotificationType.REMOVE_ELEMENT, linkElement);
+                    }
+                }
+            }
+        }
+    }
+
+
 }
