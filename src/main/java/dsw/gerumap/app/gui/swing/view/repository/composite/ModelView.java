@@ -63,6 +63,15 @@ public abstract class ModelView extends JPanel implements IListener {
         if (parentView == null) return;
         parentView.displayView(this);
         MainFrame.getInstance().getEditorWindow().setActiveProjectView(null);
+        if (this instanceof MindMapView) {
+            MainFrame.getInstance().getActionManager().getRedoAction().setEnabled(
+                    ((MindMap) model).getCommandManager().canDoCommand()
+            );
+
+            MainFrame.getInstance().getActionManager().getUndoAction().setEnabled(
+                    ((MindMap) model).getCommandManager().canUndoCommand()
+            );
+        }
     }
 
     @Override

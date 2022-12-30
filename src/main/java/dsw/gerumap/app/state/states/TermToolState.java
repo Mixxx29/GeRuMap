@@ -8,6 +8,7 @@ import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.state.AbstractState;
 import dsw.gerumap.app.util.GraphicsUtilities;
 
@@ -26,6 +27,7 @@ public class TermToolState extends AbstractState {
     public TermToolState() {
         cursor = CustomCursor.getCursor(CursorType.TERM_CURSOR);
         currentTermPainter = new TermPainter();
+        currentTermPainter.setSelected(true); // Select element
     }
 
     @Override
@@ -37,15 +39,19 @@ public class TermToolState extends AbstractState {
 
         startPoint = e.getPoint(); // Get start point
 
+        Project project = ((Project) mindMapView.getModel().getParent());
+
         // Create new element
-        currentTermElement = new TermElement();
-        currentTermElement.setPosition( // Set element position
-                GraphicsUtilities.screenToWorldPoint(e.getPoint(), mindMapView.offset, mindMapView.scale)
+        currentTermElement = new TermElement(
+                new BasicStroke(project.getTermElementStrokeSize()),
+                project.getTermElementStrokeColor(),
+                GraphicsUtilities.screenToWorldPoint(e.getPoint(), mindMapView.offset, mindMapView.scale),
+                new Dimension(300, 200),
+                project.getTermElementFillColor()
         );
 
         // Create element painter
         currentTermPainter.setElement(currentTermElement);
-        currentTermPainter.setSelected(true); // Select element
         g2 = mindMapView.getTopBufferGraphics(); // Get top buffer graphics
     }
 
@@ -57,7 +63,7 @@ public class TermToolState extends AbstractState {
         }
 
         // Add new element
-        ((MindMap)mindMapView.getModel()).addElement(currentTermElement);
+        ((MindMap) mindMapView.getModel()).addCreateTermCommand(currentTermElement);
         mindMapView.clearTopBuffer(); // Clear top buffer
 
         // Reset references
@@ -110,7 +116,7 @@ public class TermToolState extends AbstractState {
                 )
         );
 
-        currentTermElement.notifyListeners(NotificationType.UPDATE_ELEMENT, null);
+        currentTermElement.notifyListeners(NotificationType.UPDATE_ELEMENTS, null);
 
         // Paint element
         currentTermPainter.paint(g2, mindMapView.offset, mindMapView.scale);

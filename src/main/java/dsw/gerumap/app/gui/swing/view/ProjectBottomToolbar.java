@@ -34,6 +34,26 @@ public class ProjectBottomToolbar extends JToolBar {
         add(new ToolbarSeparator(new Dimension(1, 42), VERTICAL));
     }
 
+    public void setTermSettingsFillColor(Color fillColor) {
+        termSettings.setFillColor(fillColor);
+    }
+
+    public void setTermSettingsStrokeColor(Color strokeColor) {
+        termSettings.setStrokeColor(strokeColor);
+    }
+
+    public void setTermSettingsStrokeSize(int strokeSize) {
+        termSettings.setStrokeSize(strokeSize);
+    }
+
+    public void setLinkSettingsStrokeColor(Color strokeColor) {
+        linkSettings.setStrokeColor(strokeColor);
+    }
+
+    public void setLinkSettingsStrokeSize(int strokeSize) {
+        linkSettings.setStrokeSize(strokeSize);
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);

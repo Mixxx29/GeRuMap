@@ -4,6 +4,7 @@ import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
@@ -17,9 +18,11 @@ import java.awt.event.MouseEvent;
 public class LinkSettings extends JPanel {
     private Color defaultStrokeColor;
 
-    private JLabel strokeLabel;
+    private final JLabel strokeLabel;
 
-    private int strokeSize = 2;
+    private final JPanel strokeColorPanel;
+
+    private int strokeSize = 4;
 
     public LinkSettings() {
         super(new GridBagLayout());
@@ -49,7 +52,7 @@ public class LinkSettings extends JPanel {
         constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
 
-        JPanel strokeColorPanel = new JPanel();
+        strokeColorPanel = new JPanel();
         strokeColorPanel.setMaximumSize(new Dimension(20, 20));
         strokeColorPanel.setMinimumSize(new Dimension(20, 20));
         strokeColorPanel.setPreferredSize(new Dimension(20, 20));
@@ -63,9 +66,9 @@ public class LinkSettings extends JPanel {
                         DialogType.COLOR_CHOOSER,
                         "Choose term stroke color"
                 ).start(strokeColorPanel.getBackground());
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addLinkElementStrokeColorCommand(c, strokeColorPanel.getBackground());
                 strokeColorPanel.setBackground(c);
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.LINK_STROKE_COLOR, c);
             }
         });
         constraints.gridx = 1;
@@ -87,11 +90,12 @@ public class LinkSettings extends JPanel {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (strokeSize > 1) strokeSize--;
+                if (strokeSize <= 0) return;
+                strokeSize--;
                 strokeLabel.setText(String.valueOf(strokeSize));
                 strokeLabel.updateUI();
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.LINK_STROKE_SIZE, strokeSize);
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addLinkElementStrokeSizeCommand(strokeSize, strokeSize + 1);
             }
 
             @Override
@@ -133,11 +137,12 @@ public class LinkSettings extends JPanel {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (strokeSize < 99) strokeSize++;
+                if (strokeSize >= 99) return;
+                strokeSize++;
                 strokeLabel.setText(String.valueOf(strokeSize));
                 strokeLabel.updateUI();
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.LINK_STROKE_SIZE, strokeSize);
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addLinkElementStrokeSizeCommand(strokeSize, strokeSize - 1);
             }
 
             @Override
@@ -158,5 +163,16 @@ public class LinkSettings extends JPanel {
         constraints.fill = GridBagConstraints.NONE;
         constraints.insets = new Insets(0, 0, 5, 5);
         add(label, constraints);
+    }
+
+    public void setStrokeColor(Color strokeColor) {
+        strokeColorPanel.setBackground(strokeColor);
+        strokeColorPanel.repaint();
+    }
+
+    public void setStrokeSize(int strokeSize) {
+        this.strokeSize = strokeSize;
+        strokeLabel.setText(String.valueOf(strokeSize));
+        strokeLabel.repaint();
     }
 }

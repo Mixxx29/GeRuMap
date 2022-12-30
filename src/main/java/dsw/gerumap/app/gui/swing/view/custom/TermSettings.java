@@ -4,6 +4,8 @@ import dsw.gerumap.app.gui.swing.dialogs.factory.DialogFactory;
 import dsw.gerumap.app.gui.swing.dialogs.factory.DialogType;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.resources.ResourceLoader;
 import dsw.gerumap.app.resources.ResourceType;
 
@@ -21,7 +23,10 @@ public class TermSettings extends JPanel {
 
     private JLabel strokeLabel;
 
-    private int strokeSize = 2;
+    private JPanel fillColorPanel;
+    private JPanel strokeColorPanel;
+
+    private int strokeSize = 3;
 
     public TermSettings() {
         super(new GridBagLayout());
@@ -52,7 +57,7 @@ public class TermSettings extends JPanel {
         constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
 
-        JPanel fillColorPanel = new JPanel();
+        fillColorPanel = new JPanel();
         fillColorPanel.setMaximumSize(new Dimension(20, 20));
         fillColorPanel.setMinimumSize(new Dimension(20, 20));
         fillColorPanel.setPreferredSize(new Dimension(20, 20));
@@ -66,9 +71,9 @@ public class TermSettings extends JPanel {
                         DialogType.COLOR_CHOOSER,
                         "Choose term fill color"
                 ).start(fillColorPanel.getBackground());
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addTermElementFillColorCommand(c, fillColorPanel.getBackground());
                 fillColorPanel.setBackground(c);
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_FILL_COLOR, c);
             }
         });
         constraints.gridx = 1;
@@ -83,7 +88,7 @@ public class TermSettings extends JPanel {
         constraints.insets = new Insets(0, 10, 5, 10);
         add(label, constraints);
 
-        JPanel strokeColorPanel = new JPanel();
+        strokeColorPanel = new JPanel();
         strokeColorPanel.setMaximumSize(new Dimension(20, 20));
         strokeColorPanel.setMinimumSize(new Dimension(20, 20));
         strokeColorPanel.setPreferredSize(new Dimension(20, 20));
@@ -97,9 +102,9 @@ public class TermSettings extends JPanel {
                         DialogType.COLOR_CHOOSER,
                         "Choose term stroke color"
                 ).start(strokeColorPanel.getBackground());
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addTermElementStrokeColorCommand(c, strokeColorPanel.getBackground());
                 strokeColorPanel.setBackground(c);
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_COLOR, c);
             }
         });
         constraints.gridx = 2;
@@ -121,11 +126,12 @@ public class TermSettings extends JPanel {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (strokeSize > 1) strokeSize--;
+                if (strokeSize <= 0) return;
+                strokeSize--;
                 strokeLabel.setText(String.valueOf(strokeSize));
                 strokeLabel.updateUI();
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_SIZE, strokeSize);
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addTermElementStrokeSizeCommand(strokeSize, strokeSize + 1);
             }
 
             @Override
@@ -167,11 +173,12 @@ public class TermSettings extends JPanel {
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (strokeSize < 99) strokeSize++;
+                if (strokeSize >= 99) return;
+                strokeSize++;
                 strokeLabel.setText(String.valueOf(strokeSize));
                 strokeLabel.updateUI();
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().
-                        getDisplayed().getModel().notifyListeners(NotificationType.TERM_STROKE_SIZE, strokeSize);
+                ((MindMap) MainFrame.getInstance().getEditorWindow().getActiveProjectView().getDisplayed().getModel())
+                        .addTermElementStrokeSizeCommand(strokeSize, strokeSize - 1);
             }
 
             @Override
@@ -192,5 +199,21 @@ public class TermSettings extends JPanel {
         constraints.fill = GridBagConstraints.NONE;
         constraints.insets = new Insets(0, 0, 0, 5);
         add(label, constraints);
+    }
+
+    public void setFillColor(Color fillColor) {
+        fillColorPanel.setBackground(fillColor);
+        fillColorPanel.repaint();
+    }
+
+    public void setStrokeColor(Color strokeColor) {
+        strokeColorPanel.setBackground(strokeColor);
+        fillColorPanel.repaint();
+    }
+
+    public void setStrokeSize(int strokeSize) {
+        this.strokeSize = strokeSize;
+        strokeLabel.setText(String.valueOf(strokeSize));
+        strokeLabel.repaint();
     }
 }

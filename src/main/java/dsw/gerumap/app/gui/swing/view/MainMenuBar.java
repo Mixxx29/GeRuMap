@@ -39,10 +39,13 @@ public class MainMenuBar extends JMenuBar {
         JMenu editMenu = new JMenu(" Edit ");
         editMenu.setMnemonic(KeyEvent.VK_E);
         editMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        editMenu.add(actionManager.getMindMapSettingsAction());
+        editMenu.add(actionManager.getUndoAction());
+        editMenu.add(actionManager.getRedoAction());
         editMenu.add(createSeparator());
         editMenu.add(actionManager.getRenameAction());
         editMenu.add(actionManager.getDeleteAction());
+        editMenu.add(createSeparator());
+        editMenu.add(actionManager.getMindMapSettingsAction());
         add(editMenu);
 
         // Crate 'Project' menu

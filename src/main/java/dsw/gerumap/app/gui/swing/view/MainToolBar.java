@@ -33,12 +33,17 @@ public class MainToolBar extends JToolBar {
 
         addVerticalSeparator();
 
-        addButton(actionManager.getMindMapSettingsAction());
+        addButton(actionManager.getUndoAction());
+        addButton(actionManager.getRedoAction());
 
         addVerticalSeparator();
 
         addButton(actionManager.getRenameAction());
         addButton(actionManager.getDeleteAction());
+
+        addVerticalSeparator();
+
+        addButton(actionManager.getMindMapSettingsAction());
 
         addVerticalSeparator();
 

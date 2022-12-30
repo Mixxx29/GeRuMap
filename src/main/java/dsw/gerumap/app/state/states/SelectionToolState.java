@@ -5,31 +5,38 @@ import dsw.gerumap.app.gui.swing.view.cursor.CursorType;
 import dsw.gerumap.app.gui.swing.view.cursor.CustomCursor;
 import dsw.gerumap.app.gui.swing.view.repository.elements.ElementPainter;
 import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
+import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.elements.MindMapElement;
+import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.state.AbstractState;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class SelectionToolState extends AbstractState {
 
     private Point startPoint;
-    private final Color fillColor;
-    private final Color strokeColor;
-    private final BasicStroke stroke;
+    private final Color selectionFillColor;
+    private final Color selectionStrokeColor;
+    private final BasicStroke selectionStroke;
 
     private Graphics2D g2;
 
-    private boolean ctrl_down;
+    private List<MindMapElement> selected;
+    private List<MindMapElement> original;
+    private boolean clicked;
+    private boolean first = true;
 
     public SelectionToolState() {
         cursor = CustomCursor.getCursor(CursorType.SELECTION_CURSOR);
-        fillColor = new Color(41, 171, 226, 100);
-        strokeColor = new Color(40, 88, 221, 100);
-        stroke = new BasicStroke(
+        selectionFillColor = new Color(41, 171, 226, 100);
+        selectionStrokeColor = new Color(40, 88, 221, 100);
+        selectionStroke = new BasicStroke(
                 2.0f,
                 BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER,
@@ -37,6 +44,9 @@ public class SelectionToolState extends AbstractState {
                 new float[] {5.0f},
                 0.0f
         );
+
+        selected = new ArrayList<>();
+        original = new ArrayList<>();
     }
 
     public void mousePressed(MindMapView mindMapView, MouseEvent e) {
@@ -55,41 +65,46 @@ public class SelectionToolState extends AbstractState {
             return;
         }
 
-        // Reset references
-        startPoint = null;
-        g2 = null;
+        // Check if clicked
+        clicked = false;
+        if (startPoint.x == e.getX() && startPoint.y == e.getY()) {
+            clicked = true;
 
-        // Clear top buffer
-        mindMapView.clearTopBuffer();
-        mindMapView.repaint();
+            if (!e.isControlDown()) selected.clear();
+            else if (first){
+                original.addAll(selected);
+                first = false;
+            }
 
-        // Set move state
-        if (!ctrl_down && mindMapView.getSelected().size() > 0) {
-            MainFrame.getInstance().getEditorWindow().getActiveProjectView().setMoveToolState();
-        }
-    }
-
-    @Override
-    public void mouseClicked(MindMapView mindMapView, MouseEvent e) {
-        // Select element
-        if (!ctrl_down) mindMapView.deselectAllElements();
-        Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
-        while (iterator.hasNext()) {
-            ElementPainter painter = iterator.next();
-            if (painter.at(e.getPoint())) {
-                if (painter.isSelected()) {
-                    mindMapView.deselectElements(List.of(painter));
-                } else {
-                    mindMapView.selectElements(List.of(painter));
+            Iterator<ElementPainter> paintersIterator = mindMapView.getPaintersIterator();
+            while (paintersIterator.hasNext()) {
+                ElementPainter painter = paintersIterator.next();
+                if (painter.at(e.getPoint())) {
+                    if (selected.contains(painter.getElement())) {
+                        selected.remove(painter.getElement());
+                    } else {
+                        selected.add(painter.getElement());
+                    }
+                    break;
                 }
-                break;
             }
         }
 
-        if (!ctrl_down && mindMapView.getSelected().size() > 0) {
-            // Set move state
-            MainFrame.getInstance().getEditorWindow().getActiveProjectView().setMoveToolState();
+        // Clear top buffer
+        mindMapView.clearTopBuffer();
+
+        // Exit selection state
+        if (!clicked || !e.isControlDown()) {
+            if (selected.size() > 0) {
+                finish((MindMap) mindMapView.getModel());
+            }
+        } else {
+            ((MindMap) mindMapView.getModel()).selectElements(selected);
         }
+
+        // Reset references
+        startPoint = null;
+        g2 = null;
     }
 
     public void mouseDragged(MindMapView mindMapView, MouseEvent e) {
@@ -100,61 +115,70 @@ public class SelectionToolState extends AbstractState {
 
         if (startPoint == null || g2 == null) return;
 
-        Rectangle selectionRect = new Rectangle();
+        if (first){
+            original.addAll(selected);
+            first = false;
+        }
+
+        Rectangle selectionRectangle = new Rectangle();
         if (startPoint.x > e.getX()) {
-            selectionRect.x = e.getX();
-            selectionRect.width = startPoint.x - e.getX();
+            selectionRectangle.x = e.getX();
+            selectionRectangle.width = startPoint.x - e.getX();
         } else {
-            selectionRect.x = startPoint.x;
-            selectionRect.width = e.getX() - startPoint.x;
+            selectionRectangle.x = startPoint.x;
+            selectionRectangle.width = e.getX() - startPoint.x;
         }
         if (startPoint.y > e.getY()) {
-            selectionRect.y = e.getY();
-            selectionRect.height = startPoint.y - e.getY();
+            selectionRectangle.y = e.getY();
+            selectionRectangle.height = startPoint.y - e.getY();
         } else {
-            selectionRect.y = startPoint.y;
-            selectionRect.height = e.getY() - startPoint.y;
+            selectionRectangle.y = startPoint.y;
+            selectionRectangle.height = e.getY() - startPoint.y;
         }
 
         // Clear buffer
         mindMapView.clearTopBuffer();
+
         // Draw fill
-        g2.setColor(fillColor);
-        g2.fillRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+        g2.setColor(selectionFillColor);
+        g2.fillRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
 
         // Draw stroke
-        g2.setColor(strokeColor);
-        g2.setStroke(stroke);
-        g2.drawRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+        g2.setColor(selectionStrokeColor);
+        g2.setStroke(selectionStroke);
+        g2.drawRect(selectionRectangle.x, selectionRectangle.y, selectionRectangle.width, selectionRectangle.height);
 
-        // Select elements
-        mindMapView.deselectAllElements();
-        Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
-        while (iterator.hasNext()) {
-            ElementPainter painter = iterator.next();
-            if (painter.intersects(selectionRect)) mindMapView.selectElements(List.of(painter));
+        selected.clear();
+        Iterator<ElementPainter> paintersIterator = mindMapView.getPaintersIterator();
+        while (paintersIterator.hasNext()) {
+            ElementPainter painter = paintersIterator.next();
+            if (painter.intersects(selectionRectangle)) {
+                selected.add(painter.getElement());
+            }
         }
 
-        // Update
-        mindMapView.repaint();
-    }
-
-    @Override
-    public void keyPressed(MindMapView mindMapView, KeyEvent e) {
-        super.keyPressed(mindMapView, e);
-        if (e.getKeyCode() == KeyEvent.VK_CONTROL) ctrl_down = true;
+        ((MindMap) mindMapView.getModel()).selectElements(selected);
     }
 
     @Override
     public void keyReleased(MindMapView mindMapView, KeyEvent e) {
         super.keyReleased(mindMapView, e);
-        if (e.getKeyCode() == KeyEvent.VK_CONTROL)
-        {
-            ctrl_down = false;
-            if (mindMapView.getSelected().size() > 0) {
-                // Set move state
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().setMoveToolState();
+        if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+            if (((MindMap) mindMapView.getModel()).hasSelected()) {
+                finish((MindMap) mindMapView.getModel());
             }
         }
+    }
+
+    private void finish(MindMap mindMap) {
+        mindMap.selectElements(original);
+        mindMap.addSelectionCommand(selected);
+        selected.clear();
+        original.clear();
+        first = true;
+        MainFrame.getInstance()
+                .getEditorWindow()
+                .getActiveProjectView()
+                .setMoveToolState();
     }
 }

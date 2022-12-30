@@ -17,6 +17,7 @@ import dsw.gerumap.app.repository.factory.ModelType;
 import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.state.StateManager;
+import dsw.gerumap.app.state.states.*;
 import dsw.gerumap.app.util.GraphicsUtilities;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Point2D;
+import java.util.List;
 
 public class ProjectView extends CompositeModelView {
 
@@ -54,44 +56,44 @@ public class ProjectView extends CompositeModelView {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                stateManager.getCurrent().mouseEntered((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mouseEntered(getDisplayed(), e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                stateManager.getCurrent().mouseExited((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mouseExited(getDisplayed(), e);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                stateManager.getCurrent().mousePressed((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mousePressed(getDisplayed(), e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                stateManager.getCurrent().mouseReleased((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mouseReleased(getDisplayed(), e);
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                stateManager.getCurrent().mouseClicked((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mouseClicked(getDisplayed(), e);
             }
         });
         content.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                stateManager.getCurrent().mouseDragged((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().mouseDragged(getDisplayed(), e);
             }
         });
         content.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                stateManager.getCurrent().keyPressed((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().keyPressed(getDisplayed(), e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                stateManager.getCurrent().keyReleased((MindMapView) getDisplayed(), e);
+                stateManager.getCurrent().keyReleased(getDisplayed(), e);
             }
         });
         content.addMouseWheelListener(new MouseAdapter() {
@@ -99,13 +101,13 @@ public class ProjectView extends CompositeModelView {
             public void mouseWheelMoved(MouseWheelEvent e) {
                 if (e.isControlDown()) {
                     Point2D.Float beforeZoom = GraphicsUtilities.screenToWorldPoint(
-                            e.getPoint(), ((MindMapView) getDisplayed()).offset, ((MindMapView) getDisplayed()).scale
+                            e.getPoint(), getDisplayed().offset, getDisplayed().scale
                     );
-                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).scale *= 1.1f;
-                    else ((MindMapView) getDisplayed()).scale *= 0.9f;
+                    if (e.getUnitsToScroll() < 0) getDisplayed().scale *= 1.1f;
+                    else getDisplayed().scale *= 0.9f;
 
                     Point2D.Float afterZoom = GraphicsUtilities.screenToWorldPoint(
-                            e.getPoint(), ((MindMapView) getDisplayed()).offset, ((MindMapView) getDisplayed()).scale
+                            e.getPoint(), getDisplayed().offset, getDisplayed().scale
                     );
 
                     Point2D.Float difference = new Point2D.Float(
@@ -113,14 +115,14 @@ public class ProjectView extends CompositeModelView {
                             afterZoom.y - beforeZoom.y
                     );
 
-                    ((MindMapView) getDisplayed()).offset.x -= difference.x;
-                    ((MindMapView) getDisplayed()).offset.y -= difference.y;
+                    getDisplayed().offset.x -= difference.x;
+                    getDisplayed().offset.y -= difference.y;
                 } else if (e.isShiftDown()){
-                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).offset.x -= 50.0f / ((MindMapView) getDisplayed()).scale;
-                    else ((MindMapView) getDisplayed()).offset.x += 50.0f / ((MindMapView) getDisplayed()).scale;
+                    if (e.getUnitsToScroll() < 0) getDisplayed().offset.x -= 50.0f / getDisplayed().scale;
+                    else getDisplayed().offset.x += 50.0f / getDisplayed().scale;
                 } else {
-                    if (e.getUnitsToScroll() < 0) ((MindMapView) getDisplayed()).offset.y -= 50.0f / ((MindMapView) getDisplayed()).scale;
-                    else ((MindMapView) getDisplayed()).offset.y += 50.0f / ((MindMapView) getDisplayed()).scale;
+                    if (e.getUnitsToScroll() < 0) getDisplayed().offset.y -= 50.0f / getDisplayed().scale;
+                    else getDisplayed().offset.y += 50.0f / getDisplayed().scale;
                 }
 
                 content.repaint();
@@ -204,6 +206,10 @@ public class ProjectView extends CompositeModelView {
         setSelectionToolState();
     }
 
+    public MindMapView getDisplayed() {
+        return (MindMapView) super.getDisplayed();
+    }
+
     @Override
     public void addView(ModelView view) {
         if (!(view instanceof MindMapView)) return;
@@ -236,6 +242,41 @@ public class ProjectView extends CompositeModelView {
 
             case DELETE -> {
                 parentView.removeView(this);
+            }
+
+            case TERM_FILL_COLOR -> {
+                if (getDisplayed() == null) return;
+                if (object instanceof Color color) {
+                    bottomToolbar.setTermSettingsFillColor(color);
+                }
+            }
+
+            case TERM_STROKE_COLOR -> {
+                if (getDisplayed() == null) return;
+                if (object instanceof Color color) {
+                    bottomToolbar.setTermSettingsStrokeColor(color);
+                }
+            }
+
+            case TERM_STROKE_SIZE -> {
+                if (getDisplayed() == null) return;
+                if (object instanceof Integer size) {
+                    bottomToolbar.setTermSettingsStrokeSize(size);
+                }
+            }
+
+            case LINK_STROKE_COLOR -> {
+                if (getDisplayed() == null) return;
+                if (object instanceof Color color) {
+                    bottomToolbar.setLinkSettingsStrokeColor(color);
+                }
+            }
+
+            case LINK_STROKE_SIZE -> {
+                if (getDisplayed() == null) return;
+                if (object instanceof Integer size) {
+                    bottomToolbar.setLinkSettingsStrokeSize(size);
+                }
             }
         }
         super.update(notificationType, object);
@@ -295,43 +336,54 @@ public class ProjectView extends CompositeModelView {
     }
 
     public void setSelectionToolState() {
+        if (stateManager.getCurrent() instanceof SelectionToolState) return;
         stateManager.setSelectionToolState();
         toolbar.selectSelectionToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.SELECTION_CURSOR));
-        if (getDisplayed() != null) ((MindMapView)getDisplayed()).deselectAllElements();
+        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
+            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 
     public void setMoveToolState() {
+        if (stateManager.getCurrent() instanceof MoveToolState) return;
         stateManager.setMoveToolState();
         toolbar.selectMoveToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.MOVE_CURSOR));
     }
 
     public void setZoomToolState() {
+        if (stateManager.getCurrent() instanceof ZoomToolState) return;
         stateManager.setZoomToolState();
         toolbar.selectZoomToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.ZOOM_CURSOR));
-        ((MindMapView)getDisplayed()).deselectAllElements();
+        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
+            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 
     public void setEraseToolState() {
+        if (stateManager.getCurrent() instanceof EraserToolState) return;
         stateManager.setEraserToolState();
         toolbar.selectEraserToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.ERASER_CURSOR));
-        ((MindMapView)getDisplayed()).deselectAllElements();
+        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
+            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 
     public void setTermToolState() {
+        if (stateManager.getCurrent() instanceof TermToolState) return;
         stateManager.setTermToolState();
         toolbar.selectTermToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.TERM_CURSOR));
-        ((MindMapView)getDisplayed()).deselectAllElements();
+        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
+            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 
     public void setLinkToolState() {
+        if (stateManager.getCurrent() instanceof LinkToolState) return;
         stateManager.setLinkToolState();
         toolbar.selectLinkToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.LINK_CURSOR));
-        ((MindMapView)getDisplayed()).deselectAllElements();
+        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
+            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 }

@@ -23,6 +23,7 @@ public abstract class CompositeModelView extends ModelView {
         views.add(view);
         view.setParentView(this);
         view.getPreview().setParentView(this);
+        displayView(view);
         updateView();
     }
 

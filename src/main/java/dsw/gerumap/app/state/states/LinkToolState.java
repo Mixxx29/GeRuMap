@@ -9,6 +9,7 @@ import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
 import dsw.gerumap.app.repository.elements.LinkElement;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 import dsw.gerumap.app.state.AbstractState;
 import dsw.gerumap.app.util.GraphicsUtilities;
 
@@ -41,11 +42,18 @@ public class LinkToolState extends AbstractState {
             return;
         }
 
+        Project project = ((Project) mindMapView.getModel().getParent());
+
         Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
         while (iterator.hasNext()) {
             ElementPainter painter = iterator.next();
             if (painter instanceof TermPainter && painter.at(e.getPoint())) {
-                currentLinkElement = new LinkElement((TermElement) painter.getElement(), cursorElement);
+                currentLinkElement = new LinkElement(
+                        (TermElement) painter.getElement(),
+                        cursorElement,
+                        new BasicStroke(project.getLinkElementStrokeSize()),
+                        project.getLinkElementStrokeColor()
+                );
                 currentLinkPainter.setElement(currentLinkElement);
                 g2 = mindMapView.getBottomBufferGraphics();
                 break;
@@ -67,7 +75,7 @@ public class LinkToolState extends AbstractState {
             ElementPainter painter = iterator.next();
             if (painter instanceof TermPainter && painter.at(e.getPoint())) {
                 currentLinkElement.setTermElement2((TermElement) painter.getElement());
-                ((MindMap) mindMapView.getModel()).addElement(currentLinkElement);
+                ((MindMap) mindMapView.getModel()).addLinkCommand(currentLinkElement);
                 break;
             }
         }

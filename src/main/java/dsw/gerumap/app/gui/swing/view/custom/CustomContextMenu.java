@@ -34,6 +34,9 @@ public class CustomContextMenu extends JPopupMenu {
         add(new CustomMenuSeparator());
 
         add(actionManager.getMindMapSettingsAction());
+
+        add(new CustomMenuSeparator());
+
         add(actionManager.getExportAction());
     }
 }

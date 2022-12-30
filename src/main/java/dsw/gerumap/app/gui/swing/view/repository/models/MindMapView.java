@@ -26,6 +26,8 @@ public class MindMapView extends ModelView {
     private List<ElementPainter> painters;
     private List<ElementPainter> selected;
 
+    private boolean hasSelected;
+
     private BufferedImage bottomBuffer;
     private BufferedImage topBuffer;
 
@@ -99,6 +101,10 @@ public class MindMapView extends ModelView {
         return selected;
     }
 
+    public boolean hasSelected() {
+        return hasSelected;
+    }
+
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -130,11 +136,13 @@ public class MindMapView extends ModelView {
     public void clearBottomBuffer() {
         bottomBufferGraphics.setBackground(new Color(0, 0, 0, 0));
         bottomBufferGraphics.clearRect(0, 0, bottomBuffer.getWidth(), bottomBuffer.getHeight());
+        repaint();
     }
 
     public void clearTopBuffer() {
         topBufferGraphics.setBackground(new Color(0, 0, 0, 0));
         topBufferGraphics.clearRect(0, 0, topBuffer.getWidth(), topBuffer.getHeight());
+        repaint();
     }
 
     @Override
@@ -159,11 +167,9 @@ public class MindMapView extends ModelView {
                 if (object instanceof TermElement termElement) {
                     linkPainter = new TermPainter(termElement);
                     painters.add(linkPainter);
-                    selectElements(List.of(linkPainter));
                 } else if (object instanceof LinkElement linkElement) {
                     linkPainter = new LinkPainter(linkElement);
                     painters.add(0, linkPainter);
-                    selectElements(List.of(linkPainter));
                 }
                 repaint();
             }
@@ -173,20 +179,25 @@ public class MindMapView extends ModelView {
                     for (ElementPainter painter : painters) {
                         if (painter.getElement() == element) {
                             painters.remove(painter);
+                            repaint();
                             break;
                         }
                     }
+                } else if (object instanceof List<?> list) {
+                    painters.removeIf(painter -> list.contains(painter.getElement()));
                     repaint();
                 }
             }
 
-            case TERM_FILL_COLOR -> {
-                if (object instanceof Color color) {
-                    for (ElementPainter painter : selected) {
-                        if (painter instanceof TermPainter termPainter) {
-                            TermElement termElement = (TermElement) termPainter.getElement();
-                            termElement.setFillColor(color);
-                        }
+            case UPDATE_ELEMENTS -> {
+                repaint();
+            }
+
+            case SELECT_ELEMENTS -> {
+                if (object instanceof List<?> elements) {
+                    hasSelected = elements.size() > 0;
+                    for (ElementPainter painter : painters) {
+                        painter.setSelected(elements.contains(painter.getElement()));
                     }
                     repaint();
                 }
@@ -198,9 +209,10 @@ public class MindMapView extends ModelView {
                         if (painter instanceof TermPainter termPainter) {
                             TermElement termElement = (TermElement) termPainter.getElement();
                             termElement.setStrokeColor(color);
+                            repaint();
+                            break;
                         }
                     }
-                    repaint();
                 }
             }
 

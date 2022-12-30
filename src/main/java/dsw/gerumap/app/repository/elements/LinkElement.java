@@ -15,6 +15,12 @@ public class LinkElement extends MindMapElement {
         this.termElement2 = termElement2;
     }
 
+    public LinkElement(TermElement termElement1, TermElement termElement2, Stroke stroke, Color color) {
+        super(stroke, color);
+        this.termElement1 = termElement1;
+        this.termElement2 = termElement2;
+    }
+
     public TermElement getTermElement1() {
         return termElement1;
     }

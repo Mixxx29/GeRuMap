@@ -1,8 +1,6 @@
 package dsw.gerumap.app.gui.swing.actions;
 
-import dsw.gerumap.app.gui.swing.actions.edit.DeleteAction;
-import dsw.gerumap.app.gui.swing.actions.edit.ProjectSettingsAction;
-import dsw.gerumap.app.gui.swing.actions.edit.RenameAction;
+import dsw.gerumap.app.gui.swing.actions.edit.*;
 import dsw.gerumap.app.gui.swing.actions.file.*;
 import dsw.gerumap.app.gui.swing.actions.help.AboutAction;
 import dsw.gerumap.app.gui.swing.actions.help.DevelopersAction;
@@ -25,6 +23,8 @@ public class ActionManager implements IPublisher {
     private SaveAsAction saveAsAction;
     private ExportAction exportAction;
 
+    private UndoAction undoAction;
+    private RedoAction redoAction;
     private RenameAction renameAction;
     private DeleteAction deleteAction;
     private ProjectSettingsAction mindMapSettingsAction;
@@ -49,6 +49,8 @@ public class ActionManager implements IPublisher {
         saveAsAction = new SaveAsAction(this);
         exportAction = new ExportAction(this);
 
+        undoAction = new UndoAction(this);
+        redoAction = new RedoAction(this);
         renameAction = new RenameAction(this);
         deleteAction = new DeleteAction(this);
         mindMapSettingsAction = new ProjectSettingsAction(this);
@@ -107,8 +109,12 @@ public class ActionManager implements IPublisher {
         return exportAction;
     }
 
-    public ProjectSettingsAction getMindMapSettingsAction() {
-        return mindMapSettingsAction;
+    public UndoAction getUndoAction() {
+        return undoAction;
+    }
+
+    public RedoAction getRedoAction() {
+        return redoAction;
     }
 
     public RenameAction getRenameAction() {
@@ -117,6 +123,9 @@ public class ActionManager implements IPublisher {
 
     public DeleteAction getDeleteAction() {
         return deleteAction;
+    }
+    public ProjectSettingsAction getMindMapSettingsAction() {
+        return mindMapSettingsAction;
     }
 
     public SelectToolAction getSelectToolAction() {

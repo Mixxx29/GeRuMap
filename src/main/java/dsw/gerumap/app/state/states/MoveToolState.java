@@ -6,6 +6,7 @@ import dsw.gerumap.app.gui.swing.view.repository.elements.ElementPainter;
 import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.elements.TermElement;
+import dsw.gerumap.app.repository.models.MindMap;
 import dsw.gerumap.app.state.AbstractState;
 import dsw.gerumap.app.util.GraphicsUtilities;
 
@@ -16,8 +17,12 @@ import java.awt.geom.Point2D;
 
 public class MoveToolState extends AbstractState {
 
+    private  Point2D.Float offset;
+    private  Point2D.Float totalOffset;
+
     public MoveToolState() {
         cursor = CustomCursor.getCursor(CursorType.MOVE_CURSOR);
+        totalOffset = new Point2D.Float(0.0f, 0.0f);
     }
 
     @Override
@@ -39,15 +44,14 @@ public class MoveToolState extends AbstractState {
             super.mouseReleased(mindMapView, e);
             return;
         }
-    }
 
-    @Override
-    public void mouseMoved(MindMapView mindMapView, MouseEvent e) {
-        for (ElementPainter painter : mindMapView.getSelected()) {
-            if (painter.getElement() instanceof TermElement termElement) {
-
-            }
+        if (totalOffset.x != 0.0f || totalOffset.y != 0.0f) {
+            ((MindMap) mindMapView.getModel()).moveElements(new Point2D.Float(-totalOffset.x, -totalOffset.y));
+            ((MindMap) mindMapView.getModel()).addMoveElementCommand(new Point2D.Float(totalOffset.x, totalOffset.y));
         }
+
+        totalOffset.x = 0.0f;
+        totalOffset.y = 0.0f;
     }
 
     @Override
@@ -65,23 +69,15 @@ public class MoveToolState extends AbstractState {
                 startPoint, mindMapView.offset, mindMapView.scale
         );
 
-        Point2D.Float difference = new Point2D.Float(
+        offset = new Point2D.Float(
                 mousePointTranslated.x - startPointTranslated.x,
                 mousePointTranslated.y - startPointTranslated.y
         );
         startPoint = e.getPoint(); // Get starting point
 
-        for (ElementPainter selected : mindMapView.getSelected()) {
-            if (selected.getElement() instanceof TermElement termElement) {
-                termElement.setPosition(
-                        new Point2D.Float(
-                                termElement.getPosition().x + difference.x,
-                                termElement.getPosition().y + difference.y
-                        )
-                );
-            }
-            selected.getElement().notifyListeners(NotificationType.UPDATE_ELEMENT, null);
-        }
-        mindMapView.repaint();
+        totalOffset.x += offset.x;
+        totalOffset.y += offset.y;
+
+        ((MindMap) mindMapView.getModel()).moveElements(offset);
     }
 }

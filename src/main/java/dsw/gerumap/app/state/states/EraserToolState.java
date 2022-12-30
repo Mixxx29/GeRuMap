@@ -20,35 +20,19 @@ public class EraserToolState extends AbstractState {
     }
 
     @Override
-    public void mousePressed(MindMapView mindMapView, MouseEvent e) {
-        if (SwingUtilities.isMiddleMouseButton(e)) {
-            super.mousePressed(mindMapView, e);
-            return;
-        }
-    }
-
-    @Override
     public void mouseReleased(MindMapView mindMapView, MouseEvent e) {
         if (SwingUtilities.isMiddleMouseButton(e)) {
             super.mouseReleased(mindMapView, e);
             return;
         }
 
-        Iterator<ElementPainter> iterator = mindMapView.getPaintersIterator();
-        while (iterator.hasNext()) {
-            ElementPainter painter = iterator.next();
+        Iterator<ElementPainter> paintersIterator = mindMapView.getPaintersIterator();
+        while (paintersIterator.hasNext()) {
+            ElementPainter painter = paintersIterator.next();
             if (painter.at(e.getPoint())) {
-                ((MindMap)mindMapView.getModel()).removeElement(painter.getElement());
+                ((MindMap) mindMapView.getModel()).addEraseElementCommand(painter.getElement());
                 break;
             }
-        }
-    }
-
-    @Override
-    public void mouseDragged(MindMapView mindMapView, MouseEvent e) {
-        if (SwingUtilities.isMiddleMouseButton(e)) {
-            super.mouseDragged(mindMapView, e);
-            return;
         }
     }
 }
