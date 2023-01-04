@@ -7,9 +7,12 @@ import dsw.gerumap.app.repository.composite.ModelNode;
 import dsw.gerumap.app.repository.elements.LinkElement;
 import dsw.gerumap.app.repository.elements.MindMapElement;
 import dsw.gerumap.app.repository.elements.TermElement;
+import dsw.gerumap.app.repository.factory.ModelType;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +21,17 @@ import java.util.Map;
 public class MindMap extends ModelNode {
     public static final String DEFAULT_NAME = "New Mind Map";
 
-    private CommandManager commandManager;
-
+    transient private CommandManager commandManager;
     private List<MindMapElement> elements;
-    private List<MindMapElement> selectedElements;
+    transient private List<MindMapElement> selectedElements;
+
+
+    public MindMap() {
+        super("");
+        commandManager = new CommandManager();
+        elements = new ArrayList<>();
+        selectedElements = new ArrayList<>();
+    }
 
     public MindMap(String name) {
         super(name);
@@ -34,6 +44,35 @@ public class MindMap extends ModelNode {
         return commandManager;
     }
 
+    public List<MindMapElement> getElements() {
+        return new ArrayList<>(elements);
+    }
+
+    public void loadElements() {
+        for (MindMapElement element : elements) {
+            element.setParent(this);
+            if (element instanceof TermElement)
+                notifyListeners(NotificationType.ADD_ELEMENT, element);
+        }
+
+        for (MindMapElement element : elements) {
+            if (element instanceof LinkElement linkElement) {
+                linkElement.setTermElement1((TermElement) elements.get(linkElement.getTermElement1Index()));
+                linkElement.setTermElement2((TermElement) elements.get(linkElement.getTermElement2Index()));
+                notifyListeners(NotificationType.ADD_ELEMENT, linkElement);
+            }
+        }
+    }
+
+    public void saveElements() {
+        for (MindMapElement element : elements) {
+            if (element instanceof LinkElement linkElement) {
+                linkElement.setTermElement1Index(elements.indexOf(linkElement.getTermElement1()));
+                linkElement.setTermElement2Index(elements.indexOf(linkElement.getTermElement2()));
+            }
+        }
+    }
+
     public void addElement(MindMapElement element) {
         if (element instanceof LinkElement) elements.add(0, element);
         else elements.add(element);
@@ -44,6 +83,14 @@ public class MindMap extends ModelNode {
         elements.remove(element);
         selectedElements.remove(element);
         notifyListeners(NotificationType.REMOVE_ELEMENT, element);
+    }
+
+    public void exportAsPNG(String destination) {
+        notifyListeners(NotificationType.EXPORT_AS_PNG, destination + "\\" + getName() + ".png");
+    }
+
+    public int indexOfElement(MindMapElement element) {
+        return elements.indexOf(element);
     }
 
     public void moveElements(Point2D.Float offset) {
@@ -66,8 +113,27 @@ public class MindMap extends ModelNode {
         notifyListeners(NotificationType.SELECT_ELEMENTS, selectedElements);
     }
 
+    public void selectAllElements() {
+        selectedElements.clear();
+        selectedElements.addAll(elements);
+        notifyListeners(NotificationType.SELECT_ELEMENTS, selectedElements);
+    }
+
+    public void deselectAllElements() {
+        selectedElements.clear();
+        notifyListeners(NotificationType.SELECT_ELEMENTS, selectedElements);
+    }
+
     public boolean hasSelected() {
         return selectedElements.size() > 0;
+    }
+
+    public boolean hasTermSelected() {
+        for (MindMapElement element : selectedElements) {
+            if (element instanceof TermElement)
+                return true;
+        }
+        return false;
     }
 
     public void setTermElementsFillColor(List<TermElement> elements, Color termElementFillColor) {
@@ -86,7 +152,7 @@ public class MindMap extends ModelNode {
 
     public void setTermElementStrokeSize(List<TermElement> elements, float termElementStrokeSize) {
         for (TermElement element : elements) {
-            element.setStroke(new BasicStroke(termElementStrokeSize));
+            element.setStroke((int)termElementStrokeSize);
         }
         notifyListeners(NotificationType.UPDATE_ELEMENTS, null);
     }
@@ -100,7 +166,7 @@ public class MindMap extends ModelNode {
 
     public void setLinkElementStrokeSize(List<LinkElement> elements, int linkElementStrokeSize) {
         for (LinkElement element : elements) {
-            element.setStroke(new BasicStroke(linkElementStrokeSize));
+            element.setStroke((int)linkElementStrokeSize);
         }
         notifyListeners(NotificationType.UPDATE_ELEMENTS, null);
     }
@@ -133,9 +199,17 @@ public class MindMap extends ModelNode {
         commandManager.addCommand(new EraseElementCommand(this, toRemove));
     }
 
-    public void addMoveElementCommand(Point2D.Float offset) {
+    public void addMoveElementCommand(Point2D.Float offset, boolean deselectAll) {
         // Create and add new 'create term command'
-        commandManager.addCommand(new MoveElementCommand(this, offset, new ArrayList<>(selectedElements)));
+
+        commandManager.addCommand(
+                new MoveElementCommand(
+                        this,
+                        offset,
+                        new ArrayList<>(selectedElements),
+                        deselectAll
+                )
+        );
     }
 
     public void addSelectionCommand(List<MindMapElement> elements) {
@@ -213,7 +287,7 @@ public class MindMap extends ModelNode {
                 .filter(element -> element instanceof LinkElement)
                 .forEach(element -> linkElements.put((LinkElement) element, element.getStrokeColor()));
         commandManager.addCommand(
-                new LinkElementStrokeColorCommand(
+                new LinkElementStrokeColorCommand (
                         (Project) getParent(),
                         this,
                         linkElements,

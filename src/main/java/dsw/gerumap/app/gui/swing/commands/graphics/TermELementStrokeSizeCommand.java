@@ -13,7 +13,6 @@ import java.util.Map;
 public class TermELementStrokeSizeCommand extends AbstractCommand {
 
     private Project project;
-    private MindMap mindMap;
     private Map<TermElement, Integer> elements;
     private int newSize;
     private int oldSize;
@@ -23,8 +22,8 @@ public class TermELementStrokeSizeCommand extends AbstractCommand {
                                         Map<TermElement, Integer> elements,
                                         int newSize,
                                         int oldSize) {
+        super(mindMap);
         this.project = project;
-        this.mindMap = mindMap;
         this.elements = elements;
         this.newSize = newSize;
         this.oldSize = oldSize;
@@ -35,6 +34,7 @@ public class TermELementStrokeSizeCommand extends AbstractCommand {
         List<TermElement> termElements = new ArrayList<>(elements.keySet());
         project.setTermElementStrokeSize(newSize);
         mindMap.setTermElementStrokeSize(termElements, newSize);
+        super.doCommand();
     }
 
     @Override
@@ -43,5 +43,6 @@ public class TermELementStrokeSizeCommand extends AbstractCommand {
         for (TermElement termElement : elements.keySet()) {
             mindMap.setTermElementStrokeSize(List.of(termElement), elements.get(termElement));
         }
+        super.undoCommand();
     }
 }

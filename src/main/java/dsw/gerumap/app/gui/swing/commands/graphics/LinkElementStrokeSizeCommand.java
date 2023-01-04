@@ -13,7 +13,6 @@ import java.util.Map;
 public class LinkElementStrokeSizeCommand extends AbstractCommand {
 
     private Project project;
-    private MindMap mindMap;
     private Map<LinkElement, Integer> elements;
     private int newSize;
     private int oldSize;
@@ -23,8 +22,8 @@ public class LinkElementStrokeSizeCommand extends AbstractCommand {
                                         Map<LinkElement, Integer> elements,
                                         int newSize,
                                         int oldSize) {
+        super(mindMap);
         this.project = project;
-        this.mindMap = mindMap;
         this.elements = elements;
         this.newSize = newSize;
         this.oldSize = oldSize;
@@ -35,6 +34,7 @@ public class LinkElementStrokeSizeCommand extends AbstractCommand {
         List<LinkElement> termElements = new ArrayList<>(elements.keySet());
         project.setLinkElementStrokeSize(newSize);
         mindMap.setLinkElementStrokeSize(termElements, newSize);
+        super.doCommand();
     }
 
     @Override
@@ -43,5 +43,6 @@ public class LinkElementStrokeSizeCommand extends AbstractCommand {
         for (LinkElement linkElement : elements.keySet()) {
             mindMap.setLinkElementStrokeSize(List.of(linkElement), elements.get(linkElement));
         }
+        super.undoCommand();
     }
 }

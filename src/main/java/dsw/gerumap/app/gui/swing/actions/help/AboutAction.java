@@ -16,7 +16,13 @@ public class AboutAction extends AbstractCustomAction {
 
     public AboutAction(IPublisher publisher) {
         super(publisher);
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        putValue(
+                ACCELERATOR_KEY,
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_O,
+                        InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK
+                )
+        );
         putValue(SMALL_ICON, ResourceLoader.load("about.png", ResourceType.ICON));
         putValue(NAME, " About ");
         putValue(SHORT_DESCRIPTION, " About GeRuMap ");

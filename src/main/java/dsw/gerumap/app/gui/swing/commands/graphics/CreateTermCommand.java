@@ -8,11 +8,10 @@ import java.util.List;
 
 public class CreateTermCommand extends AbstractCommand {
 
-    private MindMap mindMap;
     private TermElement element;
 
     public CreateTermCommand(MindMap mindMap, TermElement element) {
-        this.mindMap = mindMap;
+        super(mindMap);
         this.element = element;
     }
 
@@ -20,10 +19,12 @@ public class CreateTermCommand extends AbstractCommand {
     public void doCommand() {
         mindMap.addElement(element);
         mindMap.selectElements(List.of(element));
+        super.doCommand();
     }
 
     @Override
     public void undoCommand() {
         mindMap.removeElement(element);
+        super.undoCommand();
     }
 }

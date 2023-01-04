@@ -57,7 +57,6 @@ public class FolderView extends CompositeModelView {
         selectPreview(view.getPreview());
         if (view instanceof ProjectView) {
             view.getModel().notifyListeners(NotificationType.SELECT, null);
-            ((Project)view.getModel()).addNode(new MindMap(MindMap.DEFAULT_NAME));
         }
     }
 

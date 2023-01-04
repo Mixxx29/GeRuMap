@@ -21,6 +21,7 @@ public class MainToolBar extends JToolBar {
         addButton(actionManager.getCreateFolderAction());
         addButton(actionManager.getCreateProjectAction());
         addButton(actionManager.getCreateMindMapAction());
+        addButton(actionManager.getOpenProjectAction());
 
         addVerticalSeparator();
 

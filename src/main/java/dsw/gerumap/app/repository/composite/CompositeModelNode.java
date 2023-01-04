@@ -2,6 +2,8 @@ package dsw.gerumap.app.repository.composite;
 
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.NotificationType;
+import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +11,7 @@ import java.util.List;
 
 public abstract class CompositeModelNode extends ModelNode {
 
-    private List<ModelNode> nodes;
+    protected List<ModelNode> nodes;
 
     public CompositeModelNode(String name) {
         super(name);
@@ -17,9 +19,13 @@ public abstract class CompositeModelNode extends ModelNode {
     }
 
     public void addNode(ModelNode node) {
+        if (nodes == null) nodes = new ArrayList<>();
         nodes.add(node);
         node.setParent(this);
         notifyListeners(NotificationType.CREATE, node);
+        if (node instanceof Project project) {
+            project.load();
+        }
     }
 
     public void removeNode(ModelNode node) {

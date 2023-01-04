@@ -13,7 +13,6 @@ import java.util.Map;
 public class TermElementFillColorCommand extends AbstractCommand {
 
     private Project project;
-    private MindMap mindMap;
     private Map<TermElement, Color> elements;
     private Color newColor;
     private Color oldColor;
@@ -24,8 +23,8 @@ public class TermElementFillColorCommand extends AbstractCommand {
                                        Color> elements,
                                        Color newColor,
                                        Color oldColor) {
+        super(mindMap);
         this.project = project;
-        this.mindMap = mindMap;
         this.elements = elements;
         this.newColor = newColor;
         this.oldColor = oldColor;
@@ -36,6 +35,7 @@ public class TermElementFillColorCommand extends AbstractCommand {
         List<TermElement> termElements = new ArrayList<>(elements.keySet());
         project.setTermElementFillColor(newColor);
         mindMap.setTermElementsFillColor(termElements, newColor);
+        super.doCommand();
     }
 
     @Override
@@ -44,5 +44,6 @@ public class TermElementFillColorCommand extends AbstractCommand {
         for (TermElement termElement : elements.keySet()) {
             mindMap.setTermElementsFillColor(List.of(termElement), elements.get(termElement));
         }
+        super.undoCommand();
     }
 }

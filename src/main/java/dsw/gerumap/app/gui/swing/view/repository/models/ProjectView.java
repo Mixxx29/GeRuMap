@@ -337,11 +337,12 @@ public class ProjectView extends CompositeModelView {
 
     public void setSelectionToolState() {
         if (stateManager.getCurrent() instanceof SelectionToolState) return;
+        if ((((MindMap)getDisplayed().getModel()).hasSelected())) {
+            ((MindMap) getDisplayed().getModel()).addSelectionCommand(List.of());
+        }
         stateManager.setSelectionToolState();
         toolbar.selectSelectionToolButton();
         content.setCursor(CustomCursor.getCursor(CursorType.SELECTION_CURSOR));
-        if ((((MindMap)getDisplayed().getModel()).hasSelected()))
-            ((MindMap)getDisplayed().getModel()).addSelectionCommand(List.of());
     }
 
     public void setMoveToolState() {

@@ -4,12 +4,17 @@ import dsw.gerumap.app.gui.swing.view.MainFrame;
 import dsw.gerumap.app.gui.swing.view.cursor.CursorType;
 import dsw.gerumap.app.gui.swing.view.cursor.CustomCursor;
 import dsw.gerumap.app.gui.swing.view.repository.models.MindMapView;
+import dsw.gerumap.app.repository.elements.MindMapElement;
+import dsw.gerumap.app.repository.models.MindMap;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class AbstractState {
 
@@ -49,21 +54,22 @@ public abstract class AbstractState {
     }
 
     public void keyPressed(MindMapView mindMapView, KeyEvent e) {
-        if (e.getModifiersEx() == InputEvent.CTRL_DOWN_MASK) {
+        if (e.isControlDown()) {
             if (e.getKeyCode() == KeyEvent.VK_A) {
+                MainFrame.getInstance().getEditorWindow().getActiveProjectView().setMoveToolState();
                 // Set move state
-                MainFrame.getInstance().getEditorWindow().getActiveProjectView().setSelectionToolState();
-                mindMapView.deselectAllElements();
-                mindMapView.selectAllElements();
-            } else if (e.getKeyCode() == KeyEvent.VK_D) {
-                mindMapView.deselectAllElements();
+                ((MindMap) mindMapView.getModel()).addSelectionCommand(
+                        ((MindMap) mindMapView.getModel()).getElements()
+                );
+            } else if (e.getKeyCode() == KeyEvent.VK_D && ((MindMap) mindMapView.getModel()).hasSelected()) {
+                ((MindMap) mindMapView.getModel()).addSelectionCommand(List.of());
             }
         }
     }
 
     public void keyReleased(MindMapView mindMapView, KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_A && e.getModifiersEx() != InputEvent.CTRL_DOWN_MASK) {
-            if (mindMapView.getSelected().size() > 0) {
+            if (((MindMap) mindMapView.getModel()).hasSelected()) {
                 // Set move state
                 MainFrame.getInstance().getEditorWindow().getActiveProjectView().setMoveToolState();
             }

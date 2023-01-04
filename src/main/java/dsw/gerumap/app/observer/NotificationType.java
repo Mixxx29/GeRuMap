@@ -16,5 +16,6 @@ public enum NotificationType {
     TERM_STROKE_COLOR,
     TERM_STROKE_SIZE,
     LINK_STROKE_COLOR,
-    LINK_STROKE_SIZE
+    LINK_STROKE_SIZE,
+    EXPORT_AS_PNG,
 }

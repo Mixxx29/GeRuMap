@@ -26,6 +26,8 @@ public class CustomContextMenu extends JPopupMenu {
         createMenu.add(actionManager.getCreateMindMapAction());
         add(createMenu);
 
+        add(actionManager.getOpenProjectAction());
+
         add(new CustomMenuSeparator());
 
         add(actionManager.getRenameAction());

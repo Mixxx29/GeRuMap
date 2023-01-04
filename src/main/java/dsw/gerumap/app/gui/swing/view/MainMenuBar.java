@@ -28,6 +28,7 @@ public class MainMenuBar extends JMenuBar {
         createMenu.add(actionManager.getCreateProjectAction());
         createMenu.add(actionManager.getCreateMindMapAction());
         fileMenu.add(createMenu);
+        fileMenu.add(actionManager.getOpenProjectAction());
         fileMenu.add(createSeparator());
         fileMenu.add(actionManager.getSaveAction());
         fileMenu.add(actionManager.getSaveAsAction());

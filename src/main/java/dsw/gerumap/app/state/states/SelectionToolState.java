@@ -162,7 +162,6 @@ public class SelectionToolState extends AbstractState {
 
     @Override
     public void keyReleased(MindMapView mindMapView, KeyEvent e) {
-        super.keyReleased(mindMapView, e);
         if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
             if (((MindMap) mindMapView.getModel()).hasSelected()) {
                 finish((MindMap) mindMapView.getModel());

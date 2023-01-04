@@ -4,24 +4,32 @@ import dsw.gerumap.app.observer.NotificationType;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TermElement extends MindMapElement {
     private Point2D.Float position;
     private Dimension size;
-    private Color fillColor;
+    private int fillColorHex;
 
     public TermElement() {
         super();
         position = new Point2D.Float(0, 0);
         size = new Dimension(100, 50);
-        fillColor = new Color(118, 226, 248);
+        setFillColor(new Color(118, 226, 248));
     }
 
-    public TermElement(Stroke stroke, Color strokeColor, Point2D.Float position, Dimension size, Color fillColor) {
+    public TermElement(int stroke, Color strokeColor, Point2D.Float position, Dimension size, Color fillColor) {
         super(stroke, strokeColor);
         this.position = position;
         this.size = size;
-        this.fillColor = fillColor;
+        setFillColor(fillColor);
+    }
+
+    public void addLink(LinkElement link) {
+        if (link.getTermElement1() == null) {
+
+        }
     }
 
     public Point2D.Float getPosition() {
@@ -41,11 +49,11 @@ public class TermElement extends MindMapElement {
     }
 
     public Color getFillColor() {
-        return fillColor;
+        return new Color(fillColorHex);
     }
 
     public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
+        this.fillColorHex = fillColor.getRGB();
     }
 
     @Override

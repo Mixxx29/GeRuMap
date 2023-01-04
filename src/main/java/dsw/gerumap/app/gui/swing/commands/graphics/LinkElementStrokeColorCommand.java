@@ -14,7 +14,6 @@ import java.util.Map;
 public class LinkElementStrokeColorCommand extends AbstractCommand {
 
     private Project project;
-    private MindMap mindMap;
     private Map<LinkElement, Color> elements;
     private Color newColor;
     private Color oldColor;
@@ -24,8 +23,8 @@ public class LinkElementStrokeColorCommand extends AbstractCommand {
                                          Map<LinkElement, Color> elements,
                                          Color newColor,
                                          Color oldColor) {
+        super(mindMap);
         this.project = project;
-        this.mindMap = mindMap;
         this.elements = elements;
         this.newColor = newColor;
         this.oldColor = oldColor;
@@ -36,6 +35,7 @@ public class LinkElementStrokeColorCommand extends AbstractCommand {
         List<LinkElement> termElements = new ArrayList<>(elements.keySet());
         project.setLinkElementStrokeColor(newColor);
         mindMap.setLinkElementStrokeColor(termElements, newColor);
+        super.doCommand();
     }
 
     @Override
@@ -44,5 +44,6 @@ public class LinkElementStrokeColorCommand extends AbstractCommand {
         for (LinkElement linkElement : elements.keySet()) {
             mindMap.setLinkElementStrokeColor(List.of(linkElement), elements.get(linkElement));
         }
+        super.undoCommand();
     }
 }

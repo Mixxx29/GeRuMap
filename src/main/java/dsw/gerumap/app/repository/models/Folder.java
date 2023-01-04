@@ -2,6 +2,7 @@ package dsw.gerumap.app.repository.models;
 
 import dsw.gerumap.app.repository.composite.CompositeModelNode;
 import dsw.gerumap.app.repository.composite.ModelNode;
+import dsw.gerumap.app.repository.factory.ModelType;
 
 public class Folder extends CompositeModelNode {
 

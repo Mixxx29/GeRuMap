@@ -3,16 +3,15 @@ package dsw.gerumap.app.gui.swing.commands.graphics;
 import dsw.gerumap.app.gui.swing.commands.AbstractCommand;
 import dsw.gerumap.app.repository.elements.MindMapElement;
 import dsw.gerumap.app.repository.models.MindMap;
+import dsw.gerumap.app.repository.models.Project;
 
 import java.util.List;
 
 public class EraseElementCommand extends AbstractCommand {
-
-    private MindMap mindMap;
     private List<MindMapElement> elements;
 
     public EraseElementCommand(MindMap mindMap, List<MindMapElement> elements) {
-        this.mindMap = mindMap;
+        super(mindMap);
         this.elements = elements;
     }
 
@@ -21,6 +20,7 @@ public class EraseElementCommand extends AbstractCommand {
         for (MindMapElement element : elements) {
             mindMap.removeElement(element);
         }
+        super.doCommand();
     }
 
     @Override
@@ -28,5 +28,6 @@ public class EraseElementCommand extends AbstractCommand {
         for (MindMapElement element : elements) {
             mindMap.addElement(element);
         }
+        super.undoCommand();
     }
 }

@@ -9,12 +9,11 @@ import java.util.List;
 
 public class SelectCommand extends AbstractCommand {
 
-    private MindMap mindMap;
     private List<MindMapElement> newElements;
     private List<MindMapElement> previousElements;
 
     public SelectCommand(MindMap mindMap, List<MindMapElement> newElements, List<MindMapElement> previousElements) {
-        this.mindMap = mindMap;
+        super(mindMap);
         this.newElements = new ArrayList<>(newElements);
         this.previousElements = new ArrayList<>(previousElements);
     }

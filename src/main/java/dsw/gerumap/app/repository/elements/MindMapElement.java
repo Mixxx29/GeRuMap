@@ -11,39 +11,38 @@ import java.util.List;
 
 public abstract class MindMapElement implements IPublisher, IListener {
 
-    protected Stroke stroke;
-    protected Color strokeColor;
+    protected int stroke;
+    protected int strokeColorHex;
 
-    protected MindMap parent;
-    protected List<IListener> listeners;
+    transient protected MindMap parent;
+    transient protected List<IListener> listeners;
 
     public MindMapElement() {
-        stroke = new BasicStroke(3.0f);
-        strokeColor = new Color(30, 78, 211);
-
+        stroke = 3;
+        setStrokeColor(new Color(30, 78, 211));
         listeners = new ArrayList<>();
     }
 
-    public MindMapElement(Stroke stroke, Color strokeColor) {
+    public MindMapElement(int stroke, Color strokeColor) {
         this.stroke = stroke;
-        this.strokeColor = strokeColor;
+        setStrokeColor(strokeColor);
 
         listeners = new ArrayList<>();
     }
 
     public Color getStrokeColor() {
-        return strokeColor;
+        return new Color(strokeColorHex);
     }
 
     public void setStrokeColor(Color strokeColor) {
-        this.strokeColor = strokeColor;
+        this.strokeColorHex = strokeColor.getRGB();
     }
 
     public Stroke getStroke() {
-        return stroke;
+        return new BasicStroke(stroke);
     }
 
-    public void setStroke(Stroke stroke) {
+    public void setStroke(int stroke) {
         this.stroke = stroke;
     }
 

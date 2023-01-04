@@ -10,12 +10,15 @@ import dsw.gerumap.app.repository.elements.MindMapElement;
 import dsw.gerumap.app.repository.elements.TermElement;
 import dsw.gerumap.app.repository.models.MindMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,9 +27,6 @@ import java.util.List;
 public class MindMapView extends ModelView {
 
     private List<ElementPainter> painters;
-    private List<ElementPainter> selected;
-
-    private boolean hasSelected;
 
     private BufferedImage bottomBuffer;
     private BufferedImage topBuffer;
@@ -40,7 +40,6 @@ public class MindMapView extends ModelView {
     public MindMapView(MindMap mindMap) {
         super(mindMap);
         painters = new ArrayList<>();
-        selected = new ArrayList<>();
 
         offset = new Point2D.Float(0.0f, 0.0f);
         scale = 1.0f;
@@ -71,38 +70,6 @@ public class MindMapView extends ModelView {
         List<ElementPainter> reverseList = new ArrayList<>(painters);
         Collections.reverse(reverseList);
         return reverseList.iterator();
-    }
-
-    public void selectElements(List<ElementPainter> toSelect) {
-        for (ElementPainter elementPainter : toSelect) {
-            selected.add(elementPainter);
-            elementPainter.setSelected(true);
-        }
-    }
-
-    public void deselectElements(List<ElementPainter> toDeselect) {
-        for (ElementPainter elementPainter : toDeselect) {
-            selected.remove(elementPainter);
-            elementPainter.setSelected(false);
-        }
-    }
-
-    public void selectAllElements() {
-        selectElements(new ArrayList<>(painters));
-        repaint();
-    }
-
-    public void deselectAllElements() {
-        deselectElements(new ArrayList<>(selected));
-        repaint();
-    }
-
-    public List<ElementPainter> getSelected() {
-        return selected;
-    }
-
-    public boolean hasSelected() {
-        return hasSelected;
     }
 
     @Override
@@ -195,7 +162,6 @@ public class MindMapView extends ModelView {
 
             case SELECT_ELEMENTS -> {
                 if (object instanceof List<?> elements) {
-                    hasSelected = elements.size() > 0;
                     for (ElementPainter painter : painters) {
                         painter.setSelected(elements.contains(painter.getElement()));
                     }
@@ -203,52 +169,17 @@ public class MindMapView extends ModelView {
                 }
             }
 
-            case TERM_STROKE_COLOR -> {
-                if (object instanceof Color color) {
-                    for (ElementPainter painter : selected) {
-                        if (painter instanceof TermPainter termPainter) {
-                            TermElement termElement = (TermElement) termPainter.getElement();
-                            termElement.setStrokeColor(color);
-                            repaint();
-                            break;
-                        }
+            case EXPORT_AS_PNG -> {
+                if (object instanceof String destination) {
+                    BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g = image.createGraphics();
+                    printAll(g);
+                    g.dispose();
+                    try {
+                        ImageIO.write(image, "png", new File(destination));
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }
-            }
-
-            case TERM_STROKE_SIZE -> {
-                if (object instanceof Integer strokeSize) {
-                    for (ElementPainter painter : selected) {
-                        if (painter instanceof TermPainter termPainter) {
-                            TermElement termElement = (TermElement) termPainter.getElement();
-                            termElement.setStroke(new BasicStroke(strokeSize));
-                        }
-                    }
-                    repaint();
-                }
-            }
-
-            case LINK_STROKE_COLOR -> {
-                if (object instanceof Color color) {
-                    for (ElementPainter painter : selected) {
-                        if (painter instanceof LinkPainter linkPainter) {
-                            LinkElement linkElement = (LinkElement) linkPainter.getElement();
-                            linkElement.setStrokeColor(color);
-                        }
-                    }
-                    repaint();
-                }
-            }
-
-            case LINK_STROKE_SIZE -> {
-                if (object instanceof Integer strokeSize) {
-                    for (ElementPainter painter : selected) {
-                        if (painter instanceof LinkPainter linkPainter) {
-                            LinkElement linkElement = (LinkElement) linkPainter.getElement();
-                            linkElement.setStroke(new BasicStroke(strokeSize));
-                        }
-                    }
-                    repaint();
                 }
             }
         }

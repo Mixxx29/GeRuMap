@@ -20,6 +20,8 @@ public class MoveToolState extends AbstractState {
     private  Point2D.Float offset;
     private  Point2D.Float totalOffset;
 
+    private boolean allSelected;
+
     public MoveToolState() {
         cursor = CustomCursor.getCursor(CursorType.MOVE_CURSOR);
         totalOffset = new Point2D.Float(0.0f, 0.0f);
@@ -33,8 +35,9 @@ public class MoveToolState extends AbstractState {
         }
 
         startPoint = e.getPoint(); // Get starting point
-        if (mindMapView.getSelected().size() == 0) {
-            mindMapView.selectAllElements();
+        if (!((MindMap)mindMapView.getModel()).hasSelected()) {
+            ((MindMap) mindMapView.getModel()).selectAllElements();
+            allSelected = true;
         }
     }
 
@@ -47,11 +50,15 @@ public class MoveToolState extends AbstractState {
 
         if (totalOffset.x != 0.0f || totalOffset.y != 0.0f) {
             ((MindMap) mindMapView.getModel()).moveElements(new Point2D.Float(-totalOffset.x, -totalOffset.y));
-            ((MindMap) mindMapView.getModel()).addMoveElementCommand(new Point2D.Float(totalOffset.x, totalOffset.y));
+            ((MindMap) mindMapView.getModel()).addMoveElementCommand(
+                    new Point2D.Float(totalOffset.x, totalOffset.y), allSelected
+            );
         }
 
         totalOffset.x = 0.0f;
         totalOffset.y = 0.0f;
+
+        allSelected = false;
     }
 
     @Override

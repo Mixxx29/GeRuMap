@@ -59,6 +59,9 @@ public class CreateProjectAction extends AbstractCustomAction {
 
         AbstractModelFactory factory = ModelFactoryManager.getFactory(ModelType.PROJECT);
         if (factory != null) factory.createModel(name, parent);
+
+        factory = ModelFactoryManager.getFactory(ModelType.MIND_MAP);
+        if (factory != null) factory.createModel("Mind Map", parent);
     }
 
     @Override

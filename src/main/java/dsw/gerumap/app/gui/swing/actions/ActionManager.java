@@ -17,6 +17,7 @@ public class ActionManager implements IPublisher {
     private List<IListener> listeners;
 
     private CreateFolderAction createFolderAction;
+    private OpenProjectAction openProjectAction;
     private CreateProjectAction createProjectAction;
     private CreateMindMapAction createMindMapAction;
     private SaveAction saveAction;
@@ -45,6 +46,7 @@ public class ActionManager implements IPublisher {
         createFolderAction = new CreateFolderAction(this);
         createProjectAction = new CreateProjectAction(this);
         createMindMapAction = new CreateMindMapAction(this);
+        openProjectAction = new OpenProjectAction(this);
         saveAction = new SaveAction(this);
         saveAsAction = new SaveAsAction(this);
         exportAction = new ExportAction(this);
@@ -95,6 +97,10 @@ public class ActionManager implements IPublisher {
 
     public CreateMindMapAction getCreateMindMapAction() {
         return createMindMapAction;
+    }
+
+    public OpenProjectAction getOpenProjectAction() {
+        return openProjectAction;
     }
 
     public SaveAction getSaveAction() {

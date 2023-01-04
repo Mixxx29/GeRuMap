@@ -43,7 +43,7 @@ public class TermToolState extends AbstractState {
 
         // Create new element
         currentTermElement = new TermElement(
-                new BasicStroke(project.getTermElementStrokeSize()),
+                (int)project.getTermElementStrokeSize(),
                 project.getTermElementStrokeColor(),
                 GraphicsUtilities.screenToWorldPoint(e.getPoint(), mindMapView.offset, mindMapView.scale),
                 new Dimension(300, 200),

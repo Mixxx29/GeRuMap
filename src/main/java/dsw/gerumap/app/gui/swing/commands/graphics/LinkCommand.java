@@ -8,11 +8,10 @@ import java.util.List;
 
 public class LinkCommand extends AbstractCommand {
 
-    private MindMap mindMap;
     private LinkElement element;
 
     public LinkCommand(MindMap mindMap, LinkElement element) {
-        this.mindMap = mindMap;
+        super(mindMap);
         this.element = element;
     }
 
@@ -20,10 +19,12 @@ public class LinkCommand extends AbstractCommand {
     public void doCommand() {
         mindMap.addElement(element);
         mindMap.selectElements(List.of(element));
+        super.doCommand();
     }
 
     @Override
     public void undoCommand() {
         mindMap.removeElement(element);
+        super.undoCommand();
     }
 }
