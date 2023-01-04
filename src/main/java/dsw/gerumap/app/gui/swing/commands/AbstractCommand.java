@@ -18,12 +18,14 @@ public abstract class AbstractCommand {
     public void doCommand() {
         boolean temp = wasChanged;
         wasChanged = ((Project) mindMap.getParent()).hasChanged();
-        ((Project) mindMap.getParent()).setChanged(temp);
+        if (!wasChanged) ((Project) mindMap.getParent()).setChanged(true);
+        else ((Project) mindMap.getParent()).setChanged(temp);
     }
 
     public void undoCommand() {
         boolean temp = wasChanged;
         wasChanged = ((Project) mindMap.getParent()).hasChanged();
-        ((Project) mindMap.getParent()).setChanged(temp);
+        if (!wasChanged) ((Project) mindMap.getParent()).setChanged(true);
+        else ((Project) mindMap.getParent()).setChanged(temp);
     }
 }

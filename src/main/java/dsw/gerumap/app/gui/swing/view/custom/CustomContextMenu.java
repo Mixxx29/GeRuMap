@@ -27,6 +27,7 @@ public class CustomContextMenu extends JPopupMenu {
         add(createMenu);
 
         add(actionManager.getOpenProjectAction());
+        add(actionManager.getLoadTemplateAction());
 
         add(new CustomMenuSeparator());
 
@@ -39,6 +40,11 @@ public class CustomContextMenu extends JPopupMenu {
 
         add(new CustomMenuSeparator());
 
-        add(actionManager.getExportAction());
+        // Create 'Create' menu
+        JMenu exportMenu = new JMenu(" Export ");
+        exportMenu.setIcon(ResourceLoader.load("export.png", ResourceType.ICON));
+        exportMenu.add(actionManager.getExportAsPNGAction());
+        exportMenu.add(actionManager.getExportAsTemplateAction());
+        add(exportMenu);
     }
 }

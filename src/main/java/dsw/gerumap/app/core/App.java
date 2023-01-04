@@ -30,6 +30,7 @@ public class App {
         AbstractLogger logger = new ConsoleLogger();
         messageGenerator.addListener(logger);
         messageGenerator.addListener((IListener) DialogFactory.createDialog(DialogType.ERROR, null));
+        messageGenerator.addListener((IListener) DialogFactory.createDialog(DialogType.SUCCESS, null));
     }
 
     public static App initialize() {

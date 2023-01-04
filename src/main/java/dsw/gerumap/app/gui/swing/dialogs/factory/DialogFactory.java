@@ -34,6 +34,10 @@ public class DialogFactory {
                 return new ErrorDialog();
             }
 
+            case SUCCESS -> {
+                return new SuccessDialog();
+            }
+
             case COLOR_CHOOSER -> {
                 if (object instanceof String) {
                     return new ColorChooserDialog((String) object);

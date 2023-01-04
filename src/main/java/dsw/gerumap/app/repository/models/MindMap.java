@@ -86,7 +86,7 @@ public class MindMap extends ModelNode {
     }
 
     public void exportAsPNG(String destination) {
-        notifyListeners(NotificationType.EXPORT_AS_PNG, destination + "\\" + getName() + ".png");
+        notifyListeners(NotificationType.EXPORT_AS_PNG, destination);
     }
 
     public int indexOfElement(MindMapElement element) {

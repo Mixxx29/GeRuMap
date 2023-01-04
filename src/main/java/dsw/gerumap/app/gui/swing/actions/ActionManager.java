@@ -18,11 +18,13 @@ public class ActionManager implements IPublisher {
 
     private CreateFolderAction createFolderAction;
     private OpenProjectAction openProjectAction;
+    private LoadTemplateAction loadTemplateAction;
     private CreateProjectAction createProjectAction;
     private CreateMindMapAction createMindMapAction;
     private SaveAction saveAction;
     private SaveAsAction saveAsAction;
-    private ExportAction exportAction;
+    private ExportAsPNGAction exportAsPNGAction;
+    private ExportAsTemplateAction exportAsTemplateAction;
 
     private UndoAction undoAction;
     private RedoAction redoAction;
@@ -47,9 +49,11 @@ public class ActionManager implements IPublisher {
         createProjectAction = new CreateProjectAction(this);
         createMindMapAction = new CreateMindMapAction(this);
         openProjectAction = new OpenProjectAction(this);
+        loadTemplateAction = new LoadTemplateAction(this);
         saveAction = new SaveAction(this);
         saveAsAction = new SaveAsAction(this);
-        exportAction = new ExportAction(this);
+        exportAsPNGAction = new ExportAsPNGAction(this);
+        exportAsTemplateAction = new ExportAsTemplateAction(this);
 
         undoAction = new UndoAction(this);
         redoAction = new RedoAction(this);
@@ -103,6 +107,10 @@ public class ActionManager implements IPublisher {
         return openProjectAction;
     }
 
+    public LoadTemplateAction getLoadTemplateAction() {
+        return loadTemplateAction;
+    }
+
     public SaveAction getSaveAction() {
         return saveAction;
     }
@@ -111,8 +119,12 @@ public class ActionManager implements IPublisher {
         return saveAsAction;
     }
 
-    public ExportAction getExportAction() {
-        return exportAction;
+    public ExportAsPNGAction getExportAsPNGAction() {
+        return exportAsPNGAction;
+    }
+
+    public ExportAsTemplateAction getExportAsTemplateAction() {
+        return exportAsTemplateAction;
     }
 
     public UndoAction getUndoAction() {

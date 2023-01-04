@@ -42,15 +42,7 @@ public class GSONSerializer implements Serializer {
 
     @Override
     public void saveProject(Project project) {
-        // Check if file exist
         File file = new File(project.getFileDirectory() + "\\" + project.getName() + ".json");
-        if (!file.exists()) {
-            try {
-                file.createNewFile(); // Create new file
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         try (FileWriter writer = new FileWriter(file.getAbsolutePath())) {
             project.save();
             gson.toJson(project, writer);
@@ -65,6 +57,28 @@ public class GSONSerializer implements Serializer {
         try {
             String projectJSON = Files.readString(Path.of(file.getAbsolutePath()));
             return gson.fromJson(projectJSON, Project.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public void saveTemplate(MindMap mindMap, String destination) {
+        File file = new File(destination);
+        try (FileWriter writer = new FileWriter(file.getAbsolutePath())) {
+            mindMap.saveElements();
+            gson.toJson(mindMap, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public MindMap loadTemplate(File file) {
+        try {
+            String mindMapJSON = Files.readString(Path.of(file.getAbsolutePath()));
+            return gson.fromJson(mindMapJSON, MindMap.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

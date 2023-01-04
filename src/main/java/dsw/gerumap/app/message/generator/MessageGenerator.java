@@ -3,6 +3,7 @@ package dsw.gerumap.app.message.generator;
 import dsw.gerumap.app.message.Message;
 import dsw.gerumap.app.message.MessageType;
 import dsw.gerumap.app.message.generator.error.ErrorType;
+import dsw.gerumap.app.message.generator.success.SuccessType;
 import dsw.gerumap.app.observer.IListener;
 import dsw.gerumap.app.observer.NotificationType;
 
@@ -69,6 +70,31 @@ public class MessageGenerator implements IMessageGenerator {
                         notifyListeners(
                                 NotificationType.MESSAGE,
                                 new Message("Mind map already exists!", MessageType.ERROR)
+                        );
+                    }
+                }
+            }
+
+            case SUCCESS -> {
+                SuccessType successType = SuccessType.values()[specific];
+                switch (successType) {
+                    case PROJECT_SAVED -> {
+                        notifyListeners(
+                                NotificationType.MESSAGE,
+                                new Message("Project saved successfully!", MessageType.SUCCESS)
+                        );
+                    }
+
+                    case EXPORT_PNG -> {
+                        notifyListeners(
+                                NotificationType.MESSAGE,
+                                new Message("Exporting png successfully!", MessageType.SUCCESS)
+                        );
+                    }
+                    case EXPORT_TEMPLATE -> {
+                        notifyListeners(
+                                NotificationType.MESSAGE,
+                                new Message("Exporting template successfully!", MessageType.SUCCESS)
                         );
                     }
                 }

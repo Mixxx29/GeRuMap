@@ -22,6 +22,7 @@ public class MainToolBar extends JToolBar {
         addButton(actionManager.getCreateProjectAction());
         addButton(actionManager.getCreateMindMapAction());
         addButton(actionManager.getOpenProjectAction());
+        addButton(actionManager.getLoadTemplateAction());
 
         addVerticalSeparator();
 
@@ -30,7 +31,8 @@ public class MainToolBar extends JToolBar {
 
         addVerticalSeparator();
 
-        addButton(actionManager.getExportAction());
+        addButton(actionManager.getExportAsPNGAction());
+        addButton(actionManager.getExportAsTemplateAction());
 
         addVerticalSeparator();
 

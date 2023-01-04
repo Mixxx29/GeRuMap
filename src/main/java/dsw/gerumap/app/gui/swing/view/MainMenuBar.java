@@ -28,12 +28,20 @@ public class MainMenuBar extends JMenuBar {
         createMenu.add(actionManager.getCreateProjectAction());
         createMenu.add(actionManager.getCreateMindMapAction());
         fileMenu.add(createMenu);
+
         fileMenu.add(actionManager.getOpenProjectAction());
+        fileMenu.add(actionManager.getLoadTemplateAction());
         fileMenu.add(createSeparator());
         fileMenu.add(actionManager.getSaveAction());
         fileMenu.add(actionManager.getSaveAsAction());
         fileMenu.add(createSeparator());
-        fileMenu.add(actionManager.getExportAction());
+
+        // Create 'Create' menu
+        JMenu exportMenu = new JMenu(" Export ");
+        exportMenu.setIcon(ResourceLoader.load("export.png", ResourceType.ICON));
+        exportMenu.add(actionManager.getExportAsPNGAction());
+        exportMenu.add(actionManager.getExportAsTemplateAction());
+        fileMenu.add(exportMenu);
         add(fileMenu);
 
         // Crate 'Edit' menu

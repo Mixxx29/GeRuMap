@@ -6,5 +6,6 @@ public enum DialogType {
     DELETE,
     DEVELOPERS,
     ERROR,
+    SUCCESS,
     COLOR_CHOOSER
 }

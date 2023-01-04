@@ -3,6 +3,9 @@ package dsw.gerumap.app.gui.swing.actions.file;
 import dsw.gerumap.app.core.App;
 import dsw.gerumap.app.gui.swing.actions.AbstractCustomAction;
 import dsw.gerumap.app.gui.swing.view.MainFrame;
+import dsw.gerumap.app.message.MessageType;
+import dsw.gerumap.app.message.generator.error.ErrorType;
+import dsw.gerumap.app.message.generator.success.SuccessType;
 import dsw.gerumap.app.observer.IPublisher;
 import dsw.gerumap.app.observer.NotificationType;
 import dsw.gerumap.app.repository.models.MindMap;
@@ -48,6 +51,7 @@ public class SaveAction extends AbstractCustomAction {
         }
 
         App.getSerializer().saveProject(project);
+        App.getMessageGenerator().generateMessage(MessageType.SUCCESS, SuccessType.PROJECT_SAVED.ordinal());
     }
 
     @Override

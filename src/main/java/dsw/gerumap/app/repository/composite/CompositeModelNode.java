@@ -25,6 +25,8 @@ public abstract class CompositeModelNode extends ModelNode {
         notifyListeners(NotificationType.CREATE, node);
         if (node instanceof Project project) {
             project.load();
+        } else if (node instanceof MindMap mindMap) {
+            mindMap.loadElements();
         }
     }
 
